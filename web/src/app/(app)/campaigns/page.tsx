@@ -442,6 +442,8 @@ function parseYaml(text: string): Record<string, unknown> {
         const a: unknown[] = []
         obj[k] = a
         if (v !== "[]") listTarget = a
+      } else if (v === "{}") {
+        obj[k] = {}
       } else {
         obj[k] = parseVal(v)
       }
@@ -455,6 +457,8 @@ function parseYaml(text: string): Record<string, unknown> {
         const a: unknown[] = []
         sub[k] = a
         if (v !== "[]") listTarget = a
+      } else if (v === "{}") {
+        sub[k] = {}
       } else {
         sub[k] = parseVal(v)
       }
@@ -474,6 +478,8 @@ function toYaml(obj: Record<string, unknown>, indent = 0): string {
       lines.push(`${pad}${k}:`)
       for (const item of v) lines.push(`${itemPad}- ${yamlVal(item)}`)
     } else if (typeof v === "object") {
+      const entries = Object.entries(v as Record<string, unknown>).filter(([, val]) => val !== null && val !== undefined)
+      if (entries.length === 0) { lines.push(`${pad}${k}: {}`); continue }
       lines.push(`${pad}${k}:`)
       lines.push(toYaml(v as Record<string, unknown>, indent + 1))
     } else {
