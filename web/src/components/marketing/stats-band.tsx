@@ -1,4 +1,4 @@
-import { Radar, ListChecks, ShieldCheck, Ban } from "lucide-react"
+import { ListChecks, ShieldCheck, Ban } from "lucide-react"
 
 const stats = [
   { icon: ListChecks, value: "5", label: "Scored dimensions, every point explained" },
@@ -12,15 +12,20 @@ const stats = [
 export function StatsBand() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+      <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 sm:grid-cols-3">
         {stats.map((s) => (
-          <div key={s.label} className="flex flex-col items-center text-center sm:items-start sm:text-left">
+          <div
+            key={s.label}
+            className="flex flex-col items-center text-center sm:items-start sm:text-left"
+          >
             <s.icon className="size-6 text-brand" />
-            <p className="mt-3 font-heading text-4xl font-semibold tracking-tight">{s.value}</p>
+            <p className="mt-3 font-heading text-4xl font-semibold tracking-tight">
+              {s.value}
+            </p>
             <p className="mt-1 text-sm text-muted-foreground">{s.label}</p>
           </div>
         ))}
       </div>
     </section>
-  )
+  );
 }

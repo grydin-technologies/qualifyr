@@ -13,7 +13,6 @@ export default function LandingPage() {
     <>
       <Hero />
       <StatsBand />
-      <SourceMarquee />
       <FeaturesBento />
       <HowItWorks />
       <DeviceMockups />
