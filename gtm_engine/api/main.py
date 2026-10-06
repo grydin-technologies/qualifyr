@@ -1049,7 +1049,7 @@ def save_api_key(key_name: str, body: ApiKeyBody, user_id: str | None = Depends(
         raise HTTPException(401, "sign in to manage API keys")
     if key_name not in ALLOWED_KEYS:
         raise HTTPException(422, f"unknown key: {key_name}; allowed: {', '.join(sorted(ALLOWED_KEYS))}")
-        if not encryption_available():
+    if not encryption_available():
         raise HTTPException(503, "GTM_ENCRYPTION_KEY not configured – cannot store API keys")
     try:
         encrypted = encrypt_key(body.value.strip())
