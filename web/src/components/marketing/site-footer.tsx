@@ -94,7 +94,7 @@ export function SiteFooter() {
 
       <div className="relative border-t">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:px-6">
-          <span>© {new Date().getFullYear()} Qualifyr. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} GrydIn Qualifyr. All rights reserved.</span>
           {/* <span className="text-xs">Built on free, public data sources.</span> */}
         </div>
       </div>
