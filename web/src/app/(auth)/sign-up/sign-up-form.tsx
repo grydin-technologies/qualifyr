@@ -41,7 +41,11 @@ export function SignUpForm() {
     const password = String(form.get("password") ?? "")
 
     try {
-      const { data, error } = await createClient().auth.signUp({ email, password })
+      const { data, error } = await createClient().auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      })
       if (error) {
         setError(error.message)
         return

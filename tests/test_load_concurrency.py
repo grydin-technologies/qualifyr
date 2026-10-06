@@ -121,7 +121,7 @@ def test_concurrent_run_dispatch_never_500s(app):
 
     resps = asyncio.run(run())
     codes = [r.status_code for r in resps]
-    assert all(code in (200, 409) for code in codes), f"a run dispatch crashed: {codes}"
+    assert all(code in (200, 409, 429) for code in codes), f"a run dispatch crashed: {codes}"
     assert 200 in codes, "no run was accepted at all"
 
 

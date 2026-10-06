@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Users, Send, Radar, Menu, Settings } from "lucide-react"
+import { LayoutDashboard, Users, Send, Radar, Menu, Settings, AlertTriangle, Key } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
@@ -82,6 +82,35 @@ function BackendStatus() {
   )
 }
 
+function KeySetupBanner() {
+  const { keyCount, keysLoading } = useCampaign()
+  if (keysLoading || keyCount >= 3) return null
+
+  if (keyCount === 0) {
+    return (
+      <div className="border-b border-amber-500/30 bg-amber-500/10 px-6 py-2.5">
+        <div className="flex items-center gap-2 text-sm text-amber-700 dark:text-amber-400">
+          <AlertTriangle className="size-4 shrink-0" />
+          <span className="font-medium">No API keys configured.</span>
+          <span className="text-amber-700/80 dark:text-amber-400/80">Campaigns cannot run discovery without at least one key.</span>
+          <Link href="/settings" className="ml-auto shrink-0 inline-flex items-center gap-1 rounded-md bg-amber-600 px-3 py-1 text-xs font-medium text-white hover:bg-amber-700 transition-colors">
+            <Key className="size-3" /> Add keys
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="border-b border-blue-500/20 bg-blue-500/5 px-6 py-2">
+      <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-400">
+        <Key className="size-3.5 shrink-0" />
+        <span>You have {keyCount} API key{keyCount > 1 ? "s" : ""}. Add more in <Link href="/settings" className="underline underline-offset-2 hover:text-blue-800 dark:hover:text-blue-300">Settings</Link> for better discovery, LLM refinement, and email verification.</span>
+      </div>
+    </div>
+  )
+}
+
 function HeaderCampaign() {
   const pathname = usePathname()
   // The Campaigns page lists every campaign as a card, so the header picker is redundant there.
@@ -139,6 +168,7 @@ function Shell({ children }: { children: React.ReactNode }) {
           <ThemeToggle />
           <SignOutButton />
         </header>
+        <KeySetupBanner />
         <main className="flex-1 p-6">{children}</main>
       </div>
     </div>

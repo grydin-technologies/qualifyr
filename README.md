@@ -7,7 +7,7 @@ a plain-English description of your product or service; it works out *who would 
 real companies from free public sources (maps, chambers of commerce, government tenders, the
 open web), reads each company's website, judges whether they're a genuine buyer, finds a
 decision-maker and a validated email, scores every match 0–100 with a readable reason, and
-returns a small set of strongly-relevant results — not a dump of thousands.
+returns a small set of strongly-relevant results – not a dump of thousands.
 
 Quality over quantity is the whole point: 3–5 excellent, well-explained matches beat a spray of
 unqualified contacts. Vendors, agencies, and competitors are filtered out of your results, not
@@ -35,7 +35,7 @@ without a human approving it first.**
    - [4. (Optional) Set up the web app](#4-optional-set-up-the-web-app)
 5. [Running it](#running-it)
 6. [Configuration](#configuration)
-7. [API keys — what each one unlocks](#api-keys--what-each-one-unlocks)
+7. [API keys – what each one unlocks](#api-keys--what-each-one-unlocks)
 8. [The web app](#the-web-app)
 9. [Outreach (approval-gated)](#outreach-approval-gated)
 10. [Deployment](#deployment)
@@ -49,7 +49,7 @@ without a human approving it first.**
 ## What it does
 
 - **Offer → targets.** You describe what you sell. A curated taxonomy (plus an optional LLM)
-  turns that into the map categories and search queries most likely to contain buyers — so you
+  turns that into the map categories and search queries most likely to contain buyers – so you
   don't need to know OpenStreetMap tag syntax.
 - **Discovery from free sources.** OpenStreetMap/Overpass, Overture Maps, the KCCI member
   directory, PPRA government tenders, keyless/Brave web search, and seed CSVs.
@@ -58,8 +58,8 @@ without a human approving it first.**
   actually need the offer?). Every verdict carries the evidence it was based on.
 - **Decision-maker + validated email.** Finds a named contact and their email, checks syntax and
   MX, and (optionally) verifies deliverability.
-- **Transparent scoring.** 0–100 from five components — review band, rating, proximity, online
-  gap, and pain evidence — each with a plain-language reason.
+- **Transparent scoring.** 0–100 from five components – review band, rating, proximity, online
+  gap, and pain evidence – each with a plain-language reason.
 - **Clean output.** A client-ready CSV, a per-company research brief, and a web dashboard.
 - **Human-approved outreach.** A 3-step email sequence that only sends after you approve each
   draft, with sender protection (warm-up, spacing, bounce guard) and reply/bounce/STOP handling.
@@ -91,11 +91,11 @@ needed to run a different search.
 | Requirement | Why | Notes |
 |---|---|---|
 | **Python 3.12+** | the engine, CLI, and API | `python --version` |
-| **A Supabase project** (free tier) | Postgres storage + user auth | [supabase.com](https://supabase.com) — the only hard external dependency |
+| **A Supabase project** (free tier) | Postgres storage + user auth | [supabase.com](https://supabase.com) – the only hard external dependency |
 | **Node.js 20+** | the web app (optional) | only if you want the UI; the CLI works without it |
 | **Git** | clone + (for scheduled runs) GitHub Actions | |
 
-Everything else — mail sending, LLM, web search, email verification, Google Places — is
+Everything else – mail sending, LLM, web search, email verification, Google Places – is
 **optional**. Qualifyr degrades gracefully: a missing key disables that one feature and never
 breaks a run. See [API keys](#api-keys--what-each-one-unlocks).
 
@@ -123,7 +123,7 @@ Installing with `-e` (editable) puts a `gtm` command on your PATH. Optional extr
 | Extra | Adds | Install when |
 |---|---|---|
 | `api` | FastAPI + uvicorn + JWT verification | you want the API / web app |
-| `overture` | DuckDB (Overture Maps discovery) | recommended — a major free data source |
+| `overture` | DuckDB (Overture Maps discovery) | recommended – a major free data source |
 | `browser` | Playwright (renders JS-only sites) | sites that don't work without JS |
 | `sheets` | Google Sheets export | you mirror leads to a Sheet |
 | `dev` | pytest + test deps | you run the test suite |
@@ -140,7 +140,7 @@ Full local setup: `pip install -e ".[api,overture,browser,sheets,dev]"`
    `GTM_SUPABASE_URL`, and the **anon/publishable** key is `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
    Enable the Email provider under Authentication → Providers.
 
-You do **not** need to create any tables — the schema is created automatically on first
+You do **not** need to create any tables – the schema is created automatically on first
 connection (`CREATE TABLE IF NOT EXISTS …`). Only the plain Postgres connection string is used;
 Supabase's service-role/REST keys are not.
 
@@ -155,11 +155,11 @@ The bare minimum to run a campaign locally:
 ```bash
 # .env
 GTM_DATABASE_URL=postgresql://postgres.xxxx:PASSWORD@aws-0-region.pooler.supabase.com:6543/postgres
-GTM_AUTH_DISABLED=1          # local only — skips the API token check
+GTM_AUTH_DISABLED=1          # local only – skips the API token check
 ```
 
 That's enough to discover and qualify companies and export a CSV. `.env` is auto-loaded and is
-gitignored — never commit it. Add optional keys as you need the features behind them
+gitignored – never commit it. Add optional keys as you need the features behind them
 ([table below](#api-keys--what-each-one-unlocks)); `.env.example` documents every variable.
 
 ### 4. (Optional) Set up the web app
@@ -253,7 +253,7 @@ review 20.
 
 ---
 
-## API keys — what each one unlocks
+## API keys – what each one unlocks
 
 All optional. A missing key disables only that feature. Full details and current quotas live in
 [`docs/API_KEYS.md`](docs/API_KEYS.md).
@@ -264,8 +264,8 @@ All optional. A missing key disables only that feature. Full details and current
 | `GTM_BRAVE_API_KEY` | web-search discovery + website finding (falls back to keyless DuckDuckGo) | ~1k searches/mo (card required) |
 | `GTM_GOOGLE_PLACES_API_KEY` | rating, review count, hours, review text (biggest scoring boost) | ~1k calls/mo |
 | `GTM_HUNTER_API_KEY` / `GTM_REACHER_URL` | decision-maker email verification | Hunter free; Reacher self-host |
-| `GTM_SMTP_*` / `GTM_GMAIL_*` | actually sending outreach (otherwise every send is a dry run) | — |
-| `GTM_SHEETS_*` | Google Sheets export mirror | — |
+| `GTM_SMTP_*` / `GTM_GMAIL_*` | actually sending outreach (otherwise every send is a dry run) | – |
+| `GTM_SHEETS_*` | Google Sheets export mirror | – |
 | `GTM_GEMINI_API_KEY` | alternate LLM (Groq is the reliable default) | often 404/503 on free tier |
 
 **Per-user keys (self-hosting):** in the web app, each user stores their own keys (encrypted at
@@ -282,14 +282,14 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 
 Five pages (`web/`, Next.js 16 + Tailwind + shadcn):
 
-- **Dashboard** — counts, score distribution, top matches, campaign meta.
-- **Campaigns** — create a search (plain-English or manual), run discovery with live progress,
+- **Dashboard** – counts, score distribution, top matches, campaign meta.
+- **Campaigns** – create a search (plain-English or manual), run discovery with live progress,
   download CSV, edit/delete.
-- **Leads** — every company processed, newest first; filter by type/score, search, open a lead
+- **Leads** – every company processed, newest first; filter by type/score, search, open a lead
   to see every reason, the research brief, and its activity; suppress.
-- **Outreach** — the approval queue: each due email is rendered, you edit subject/body, approve
+- **Outreach** – the approval queue: each due email is rendered, you edit subject/body, approve
   or reject, then send; plus in-sequence and activity views.
-- **Settings** — API keys, usage limits, mailboxes.
+- **Settings** – API keys, usage limits, mailboxes.
 
 ---
 
@@ -312,7 +312,7 @@ mailboxes rotate (`GTM_MAILBOX_1_*` … `_10_*`); Email 1 goes to the least-load
 follow-ups stay on the thread's mailbox. Replies are pulled over IMAP and classified. Every send
 is recorded in a durable ledger so an address never gets the same step twice.
 
-Preferred credentials: Gmail OAuth2 — set `GTM_GMAIL_CLIENT_ID/SECRET` + `GTM_SMTP_USER` and run
+Preferred credentials: Gmail OAuth2 – set `GTM_GMAIL_CLIENT_ID/SECRET` + `GTM_SMTP_USER` and run
 `gtm outreach gmail-auth` once. Fallback: `GTM_SMTP_PASSWORD` (an App Password).
 
 ---
@@ -333,13 +333,13 @@ Workflows (`.github/workflows/`):
 | Workflow | Trigger | Does |
 |---|---|---|
 | `gather-leads.yml` | weekly cron + manual | discovery/crawl, commits leads (never contacts anyone) |
-| `outreach.yml` | **manual only, by design** | sends approved emails (no cron — nothing emails unattended) |
+| `outreach.yml` | **manual only, by design** | sends approved emails (no cron – nothing emails unattended) |
 | `verify-sent.yml` | post-send | delivery verification |
 | `ci.yml` | push/PR | tests + web build |
 | `pages.yml` | push | GitHub Pages landing page |
 
 Set `GTM_CORS_ORIGINS` to your deployed frontend origin (`localhost:3000` is always allowed).
-CORS is a browser policy, not access control — the Supabase bearer-token check protects the data.
+CORS is a browser policy, not access control – the Supabase bearer-token check protects the data.
 
 ---
 
@@ -356,7 +356,7 @@ gtm_engine/
   intent/         ppra.py (PK tenders), company_pages.py (RFQ/hiring signals)
   enrichment/     contacts, signals, email_patterns, places.py (Google Places), online_presence.py,
                   hours.py, research.py (research brief), fieldclean.py
-  llm/            client.py (Groq/Gemini/Ollama) + tasks.py — grounded, optional, off by default
+  llm/            client.py (Groq/Gemini/Ollama) + tasks.py – grounded, optional, off by default
   scoring/        scoring.py (decomposed 0–100) + proximity.py
   validation/     domains, emails, dedupe, verifier (Hunter/Reacher/MX), liveness
   outreach/       sequencer, sender, reply classifier, mailboxes, durable ledger
@@ -392,7 +392,7 @@ cd web && npm run build          # tsc + eslint + production build
 
 ## Troubleshooting
 
-- **Every API request returns 500.** `GTM_SUPABASE_URL` is unset. This is deliberate — an unset
+- **Every API request returns 500.** `GTM_SUPABASE_URL` is unset. This is deliberate – an unset
   auth variable must never silently open the API. Set it, or use `GTM_AUTH_DISABLED=1` locally.
 - **DB-backed tests all skip.** Expected without `GTM_TEST_DATABASE_URL` / `GTM_DATABASE_URL`.
 - **No companies discovered.** With no Brave key and no explicit categories, give the offer more
@@ -401,7 +401,7 @@ cd web && npm run build          # tsc + eslint + production build
 - **Sends do nothing.** With no mail credentials every send is a dry run (writes `.eml` files to
   `data/outbox/`). Add `GTM_GMAIL_*` or `GTM_SMTP_*`.
 - **Sign-up says sign-up isn't configured.** `NEXT_PUBLIC_SUPABASE_URL` / `_ANON_KEY` are missing
-  from the build — on Vercel, add them and redeploy (they're inlined at build time).
+  from the build – on Vercel, add them and redeploy (they're inlined at build time).
 
 ---
 

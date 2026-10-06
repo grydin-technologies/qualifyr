@@ -12,13 +12,13 @@ fallbacks:
   city: "Pakistan"
 
 email_1:
-  subject: "{company_name} — quick question"
+  subject: "{company_name} – quick question"
   body: |
     Hi {first_name},
 
     I came across {company_name} while looking at growing retailers in {city}.{hook_sentence}
 
-    We help businesses like yours with {offer} — without adding headcount or a long implementation.
+    We help businesses like yours with {offer} – without adding headcount or a long implementation.
 
     Would it be worth a 15-minute call this week to see if it fits? If you're not the right person, I'd appreciate a pointer to whoever looks after operations.
 
@@ -26,7 +26,7 @@ email_1:
     {sender_name}
 
 followup_1:
-  subject: "Re: {company_name} — quick question"
+  subject: "Re: {company_name} – quick question"
   body: |
     Hi {first_name},
 
@@ -40,11 +40,11 @@ followup_1:
     {sender_name}
 
 followup_2:
-  subject: "Re: {company_name} — quick question"
+  subject: "Re: {company_name} – quick question"
   body: |
     Hi {first_name},
 
-    Last note from me — I don't want to clutter your inbox.
+    Last note from me – I don't want to clutter your inbox.
 
     If improving {offer} is on the roadmap for {company_name} this year, I'm happy to send over a one-page summary you can share internally. Otherwise, no problem at all.
 

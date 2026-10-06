@@ -77,7 +77,7 @@ async def test_intent_verdict_is_recorded_on_the_lead(campaign, settings, defaul
 @respx.mock
 async def test_confident_non_buyer_verdict_demotes_the_retailer(campaign, settings, defaults):
     # The retailer keyword-classifies as BUYER; a confident "not a buyer" intent verdict must
-    # pull it out of BUYER, proving intent — not keywords — has the final say.
+    # pull it out of BUYER, proving intent – not keywords – has the final say.
     by_name = await _run(campaign, settings, defaults,
                          {"buyer": False, "confidence": 0.9, "reason": "no evident need"})
     zara = by_name["Zara Fabrics"]

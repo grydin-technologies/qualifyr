@@ -1,5 +1,5 @@
 """SSRF guard: the crawler must refuse non-public IP-literal hosts (cloud metadata, loopback,
-private ranges) and still allow public hosts. Hermetic — no DNS, no network: the guard works on
+private ranges) and still allow public hosts. Hermetic – no DNS, no network: the guard works on
 IP literals only and short-circuits before any request is made."""
 
 from gtm_engine.config.schema import EngineSettings

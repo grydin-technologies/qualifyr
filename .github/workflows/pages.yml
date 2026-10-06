@@ -17,6 +17,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.repository == 'Hasee10/qualifyr' || github.repository == 'grydinteam/qualifyr'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

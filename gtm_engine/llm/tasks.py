@@ -49,7 +49,7 @@ async def generate_keywords(llm: LLM | None, offer: str, industries: list[str] |
 async def generate_search_queries(llm: LLM | None, offer: str, region: str | None = None,
                                   max_queries: int = 5) -> list[str]:
     """Web-search queries that would surface COMPANIES likely to BUY the offer in `region`.
-    Unlike map categories, a search query is free text, so the LLM may write it directly — but
+    Unlike map categories, a search query is free text, so the LLM may write it directly – but
     it must target buyers (a plausible customer), not the seller's own competitors. Returns []
     without an LLM; the caller pairs this with deterministic seed queries."""
     if llm is None or not (offer or "").strip():
@@ -71,12 +71,12 @@ async def generate_search_queries(llm: LLM | None, offer: str, region: str | Non
 
 async def judge_intent(llm: LLM | None, offer: str, evidence: str, max_tokens: int = 400) -> dict | None:
     """Decide whether a company is a plausible BUYER of `offer`, judged from `evidence` (its
-    own scraped text: name, description, about/services, category, signals) — the CEO's
+    own scraped text: name, description, about/services, category, signals) – the CEO's
     "strictly by intent, not keywords" rule. The model must judge NEED, not sector: a company
     in a related industry, or one merely hiring, is not a buyer unless the need is evident.
 
     Returns {"buyer": bool, "confidence": 0-1, "reason": "<grounded phrase>", "by": "llm:..."}
-    or None when there is no LLM, no offer, or no usable evidence — in which case the caller
+    or None when there is no LLM, no offer, or no usable evidence – in which case the caller
     keeps the deterministic keyword classifier, so behaviour is unchanged without the LLM.
     This is a judgment, so the reason may paraphrase; it is never treated as an extracted fact."""
     if llm is None or not offer.strip() or not (evidence or "").strip():
@@ -85,7 +85,7 @@ async def judge_intent(llm: LLM | None, offer: str, evidence: str, max_tokens: i
         "You decide whether a company is a plausible BUYER of the seller's offer, using ONLY "
         "the company text provided. A company is a buyer only if it plausibly NEEDS and would "
         "purchase the offer for its own use. Being in a related industry, or merely hiring, is "
-        "NOT enough on its own — the need must be evident in the text. A company that SELLS or "
+        "NOT enough on its own – the need must be evident in the text. A company that SELLS or "
         "PROVIDES something similar (an agency, vendor or competitor) is not a buyer. "
         'Answer with one JSON object only: {"buyer": true|false, "confidence": 0.0-1.0, '
         '"reason": "at most 25 words, grounded in the company text"}.'
@@ -190,7 +190,7 @@ async def generate_pitch_angle(llm: LLM | None, offer: str, company: str,
     """Map the seller's offer + the prospect's observed gaps/pain to a specific pitch line.
 
     The deterministic fallback always runs: the LLM only polishes it into a natural sentence.
-    Every pitch is grounded — it names what was observed, never invents a need."""
+    Every pitch is grounded – it names what was observed, never invents a need."""
     deterministic = _fallback_pitch(offer, company, online_gaps, pain_signals, buying_signals)
     if llm is None or not offer.strip() or not (online_gaps or pain_signals or buying_signals):
         return deterministic
@@ -244,7 +244,7 @@ def _fallback_pitch(offer: str, company: str, online_gaps: list[str],
         parts.append(f"{buying_signals[0]}")
     if not parts:
         return f"{company} could benefit from {offer}."
-    return f"{company} {parts[0]}" + (f" and {parts[1]}" if len(parts) > 1 else "") + f" — {offer} addresses this."
+    return f"{company} {parts[0]}" + (f" and {parts[1]}" if len(parts) > 1 else "") + f" – {offer} addresses this."
 
 
 _REVIEW_PAIN_PATTERNS: list[tuple[str, str]] = [
@@ -305,14 +305,14 @@ async def extract_review_pain(llm: LLM | None, company: str,
 
 # Relevance is judged in chunks so a run with many map-sourced companies is fully checked, not
 # just the first chunk. Beyond MAX_JUDGED we stop spending tokens and keep the rest (they already
-# cleared the deterministic keyword filter upstream) — 6 calls is plenty for a quality-first run.
+# cleared the deterministic keyword filter upstream) – 6 calls is plenty for a quality-first run.
 _RELEVANCE_BATCH = 20
 _RELEVANCE_MAX_JUDGED = 120
 
 
 async def _relevance_batch(llm: LLM, target_description: str, batch: list[dict]) -> list[bool]:
     """Judge one chunk of companies. On LLM/parse failure, keep the chunk (return all True) so a
-    transient error never silently drops real matches — dropping is reserved for a clear 'false'."""
+    transient error never silently drops real matches – dropping is reserved for a clear 'false'."""
     lines = []
     for i, c in enumerate(batch):
         parts = [c.get("name", "Unknown")]
@@ -324,7 +324,7 @@ async def _relevance_batch(llm: LLM, target_description: str, batch: list[dict])
     system = (
         "You check whether each discovered business IS SPECIFICALLY the target business type. "
         "Be strict: the same broad sector is NOT enough. For target 'dentists', a pharmacy, "
-        "hospital, medical college, or diagnostic lab is false — only an actual dental "
+        "hospital, medical college, or diagnostic lab is false – only an actual dental "
         "clinic/dentist is true. For target 'grocery marts', an electronics or book shop is "
         "false. Answer true only if the company clearly offers the target product or service; "
         "when genuinely unsure, answer false. "
@@ -342,7 +342,7 @@ async def _relevance_batch(llm: LLM, target_description: str, batch: list[dict])
         return [True] * len(batch)
     parsed = _parse_keyword_list(raw)
     results = [str(item).strip().lower() in ("true", "1", "yes") for item in parsed]
-    # A short/garbled reply must not drop the companies it didn't cover — pad the remainder True.
+    # A short/garbled reply must not drop the companies it didn't cover – pad the remainder True.
     while len(results) < len(batch):
         results.append(True)
     return results[:len(batch)]
@@ -355,7 +355,7 @@ async def check_discovery_relevance(llm: LLM | None, target_description: str,
     Input companies are dicts with at least 'name' and optionally 'category', 'address'.
     Returns a list of booleans parallel to input. Fallback: all True (no filtering without LLM).
     Judges in chunks of 20 so EVERY company is checked (up to MAX_JUDGED), not just the first
-    chunk — the previous single-batch version silently passed everything past the first 20."""
+    chunk – the previous single-batch version silently passed everything past the first 20."""
     if llm is None or not target_description or not companies:
         return [True] * len(companies)
     results: list[bool] = []
@@ -414,7 +414,7 @@ async def parse_campaign_nl(llm: LLM | None, text: str,
         "or neighborhoods within a city (e.g. F-11, G-11, DHA, Gulberg, Saddar).\n\n"
         "Output a single JSON object with these keys (include ALL that apply):\n"
         '  "name" (string): a SHORT campaign title, max 8 words, e.g. "Marts near F-11 G-11 Islamabad"\n'
-        '  "offer" (string): what the user is looking for or selling — the core search intent, NOT the raw input\n'
+        '  "offer" (string): what the user is looking for or selling – the core search intent, NOT the raw input\n'
         '  "cities" (array of strings): Pakistani cities mentioned\n'
         '  "areas" (array of strings): specific localities/sectors/neighborhoods within the city (e.g. "F-11", "G-11", "DHA Phase 5")\n'
         '  "target_industries" (array of strings): industry terms describing the businesses to find (e.g. "grocery", "supermarket", "mart")\n'
@@ -428,7 +428,7 @@ async def parse_campaign_nl(llm: LLM | None, text: str,
         "IMPORTANT:\n"
         "- name must be SHORT and descriptive (max 8 words), never the raw input text\n"
         "- offer should describe the search intent concisely, not repeat the input\n"
-        "- target_industries and buyer_keywords should ALWAYS be filled — infer from context\n"
+        "- target_industries and buyer_keywords should ALWAYS be filled – infer from context\n"
         "- search_queries should include area names if the user mentioned specific areas\n"
         "- Omit a key ONLY if it truly cannot be determined. Output ONLY the JSON object."
     )

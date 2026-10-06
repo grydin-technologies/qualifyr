@@ -1,6 +1,6 @@
 """Deterministic reply classification. No model, no guessing: each label is a set of
 phrases, checked in a fixed priority order, and every decision carries the phrase that
-fired so the reviewer can see why. Unmatched replies are still replies — a human reads them."""
+fired so the reviewer can see why. Unmatched replies are still replies – a human reads them."""
 
 from __future__ import annotations
 
@@ -112,7 +112,7 @@ def _referral(text: str, own_email: str | None, sender: str | None) -> tuple[str
         return None, None
     email = emails[0]
     # A name is usually just before the address: "contact Ahmed Raza (ahmed@...)" / "Ahmed Raza - ahmed@"
-    m = re.search(r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})\s*[\(\-–—,:]?\s*" + re.escape(email), text)
+    m = re.search(r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})\s*[\(\-––,:]?\s*" + re.escape(email), text)
     return email, (m.group(1) if m else None)
 
 

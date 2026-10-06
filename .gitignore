@@ -37,3 +37,5 @@ data/outbox/
 
 # Local snapshot taken before clean_test_debris.py --apply. Data, not source.
 debris-backup.json
+_encryption_key.txt
+leads/

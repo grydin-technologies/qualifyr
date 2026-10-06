@@ -9,12 +9,12 @@ const steps = [
   {
     n: "02",
     title: "We discover and qualify",
-    description: "Companies are pulled from public sources, classified buyer vs. vendor, and scored with a written reason for every point.",
+    description: "Companies are pulled from various sources, classified buyer vs. vendor, and scored with a written reason for every point.",
   },
   {
     n: "03",
     title: "Approve and send",
-    description: "Review the queue, approve what looks right, and outreach goes out from your own mailbox — never automatically.",
+    description: "Review the queue, approve what looks right, and outreach goes out from your own mailbox – never automatically.",
   },
 ]
 
@@ -26,7 +26,7 @@ export function HowItWorks() {
         <div className="mx-auto mt-3 max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">From campaign to first reply</h2>
           <p className="mt-4 text-muted-foreground">
-            No dashboards to configure before you start &mdash; define a campaign and the
+            No dashboards to configure before you start &ndash; define a campaign and the
             pipeline runs.
           </p>
         </div>

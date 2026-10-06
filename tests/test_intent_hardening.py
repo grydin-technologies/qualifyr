@@ -1,6 +1,6 @@
 """Intent hardening: retry/backoff on transient LLM failures, and richer intent evidence.
 
-Offline — the LLM HTTP calls are mocked with respx; no live network."""
+Offline – the LLM HTTP calls are mocked with respx; no live network."""
 
 import time
 

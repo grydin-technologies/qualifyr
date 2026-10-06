@@ -2,7 +2,7 @@
 
 The reframe (PLAN.md) is quality over quantity, and the CEO's success metric is reviewer
 accuracy >= 80%. That is only meaningful if we can measure it, so this scores the
-BUYER/VENDOR/UNKNOWN gate — the decision the whole engine turns on — against a fixed set of
+BUYER/VENDOR/UNKNOWN gate – the decision the whole engine turns on – against a fixed set of
 labelled examples. It is pure (no network, no DB), so it runs anywhere and every change can
 be checked for a regression before it ships.
 

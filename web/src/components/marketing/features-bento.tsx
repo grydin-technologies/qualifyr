@@ -91,7 +91,7 @@ export function FeaturesBento() {
             Everything between &ldquo;a list of companies&rdquo; and a booked meeting
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Discovery, qualification, contact discovery and outreach in one pipeline &mdash;
+            Discovery, qualification, contact discovery and outreach in one pipeline &ndash;
             each step keeps its evidence.
           </p>
         </div>
@@ -107,7 +107,7 @@ export function FeaturesBento() {
         <FeatureCard
           icon={Gauge}
           title="Explainable 0–100 scoring"
-          description="Every score comes with the plain-English reasons behind it — geography, buyer terms, contact quality, buying signals."
+          description="Every score comes with the plain-English reasons behind it – geography, buyer terms, contact quality, buying signals."
         />
 
         <FeatureCard
@@ -119,7 +119,7 @@ export function FeaturesBento() {
           className="lg:col-span-2"
           icon={Radar}
           title="GTM intelligence signals"
-          description="Hiring, GitHub activity, press and funding mentions — evidence of momentum, not just a static company profile."
+          description="Hiring, GitHub activity, press and funding mentions – evidence of momentum, not just a static company profile."
         />
 
         <FeatureCard

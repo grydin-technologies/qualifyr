@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       campaign:
-        description: Campaign YAML path
+        description: Campaign YAML path or DB id
         default: config/campaigns/example_retail_islamabad.yaml
       max_companies:
         description: Companies to process this run
@@ -13,6 +13,9 @@ on:
         description: Commit CSVs into leads/ (otherwise artifacts only)
         type: boolean
         default: true
+      user_id:
+        description: Supabase user ID (resolves per-user API keys from DB)
+        default: ""
   schedule:
     - cron: "0 3 * * 1"   # Mondays 03:00 UTC (08:00 PKT)
 
@@ -37,20 +40,19 @@ jobs:
       CAMPAIGN: ${{ github.event.inputs.campaign || 'config/campaigns/example_retail_islamabad.yaml' }}
       MAX_COMPANIES: ${{ github.event.inputs.max_companies || '60' }}
       COMMIT_RESULTS: ${{ github.event.inputs.commit_results || 'true' }}
-      GTM_SHEETS_CREDENTIALS_JSON: ${{ secrets.GTM_SHEETS_CREDENTIALS_JSON }}
-      GTM_SHEETS_SPREADSHEET_ID: ${{ secrets.GTM_SHEETS_SPREADSHEET_ID }}
-      GTM_BRAVE_API_KEY: ${{ secrets.GTM_BRAVE_API_KEY }}
+      USER_ID: ${{ github.event.inputs.user_id || '' }}
+      # Infrastructure secrets (shared, repo-level)
       GTM_DATABASE_URL: ${{ secrets.GTM_DATABASE_URL }}
-      # Read by validation/verifier.py (mailbox verification) and llm/client.py. Without
-      # them the crawl silently downgrades: no mailbox confirmation, no LLM layer.
+      GTM_ENCRYPTION_KEY: ${{ secrets.GTM_ENCRYPTION_KEY }}
+      # Operator-level API keys (fallback when no per-user key in DB).
+      # On grydinteam these are absent – users bring their own via the Settings UI.
+      GTM_BRAVE_API_KEY: ${{ secrets.GTM_BRAVE_API_KEY }}
       GTM_HUNTER_API_KEY: ${{ secrets.GTM_HUNTER_API_KEY }}
       GTM_GROQ_API_KEY: ${{ secrets.GTM_GROQ_API_KEY }}
-      # Read-only, no scopes: raises the GitHub REST rate limit used by
-      # enrichment/github_signals.py from 60/hr to 5000/hr. Deliberately not
-      # GTM_GITHUB_TOKEN - that PAT has actions:write and triggers our own workflows;
-      # it has no business being handed to a job that only reads third-party orgs.
-      GTM_GITHUB_READ_TOKEN: ${{ secrets.GTM_GITHUB_READ_TOKEN }}
       GTM_GOOGLE_PLACES_API_KEY: ${{ secrets.GTM_GOOGLE_PLACES_API_KEY }}
+      GTM_SHEETS_CREDENTIALS_JSON: ${{ secrets.GTM_SHEETS_CREDENTIALS_JSON }}
+      GTM_SHEETS_SPREADSHEET_ID: ${{ secrets.GTM_SHEETS_SPREADSHEET_ID }}
+      GTM_GITHUB_READ_TOKEN: ${{ secrets.GTM_GITHUB_READ_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -60,6 +62,13 @@ jobs:
           cache: pip
 
       - run: pip install -e ".[api,overture,sheets]"
+
+      # Resolve per-user API keys from Supabase (encrypted at rest).
+      # Overwrites any repo-level key secrets with the user's own keys.
+      # On Hasee10 (no user_id) this is a no-op and repo secrets are used.
+      - name: Resolve user API keys
+        if: env.USER_ID != ''
+        run: python scripts/resolve_user_keys.py "$USER_ID"
 
       # Local geocode cache only (dedupe/suppression state now lives in Postgres).
       - name: Restore geocode cache
@@ -93,7 +102,7 @@ jobs:
           retention-days: 90
 
       - name: Commit results into leads/
-        if: env.COMMIT_RESULTS == 'true'
+        if: env.COMMIT_RESULTS == 'true' && github.repository == 'Hasee10/qualifyr'
         run: |
           campaign_id=$(python -m gtm_engine.cli campaign-id "$CAMPAIGN")
           mkdir -p "leads/$campaign_id"

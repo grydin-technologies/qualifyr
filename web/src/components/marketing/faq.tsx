@@ -7,15 +7,15 @@ import { Illustration } from "@/components/marketing/illustration"
 const faqs = [
   {
     q: "Can I just sign up?",
-    a: "Yes — create an account and you're in. There's no waitlist and no sales call.",
+    a: "Yes – create an account and you're in. There's no waitlist and no sales call.",
   },
-  {
-    q: "Where does the company data come from?",
-    a: "Free public sources only: OpenStreetMap, Overture Maps, PPRA tenders, the KCCI member directory, GDELT news, and public job/repo APIs like Greenhouse, Lever and GitHub. No paid data broker.",
-  },
+  // {
+  //   q: "Where does the company data come from?",
+  //   a: "Free public sources only: OpenStreetMap, Overture Maps, PPRA tenders, the KCCI member directory, GDELT news, and public job/repo APIs like Greenhouse, Lever and GitHub. No paid data broker.",
+  // },
   {
     q: "How is a lead scored?",
-    a: "A deterministic 0–100 score across geography fit, company quality, buyer evidence, contact quality and buying signals — every point comes with a written reason, not a black-box model.",
+    a: "A deterministic 0–100 score across geography fit, company quality, buyer evidence, contact quality and buying signals – every point comes with a written reason, not a black-box model.",
   },
   {
     q: "Does outreach send automatically?",
@@ -23,12 +23,12 @@ const faqs = [
   },
   {
     q: "Is there a mobile app?",
-    a: "No — the dashboard is fully responsive, so the same app works on your phone without a separate install.",
+    a: "No – the dashboard is fully responsive, so the same app works on your phone without a separate install.",
   },
 ]
 
 /** Heading pairs with one illustration (image right on desktop, below the heading on
- *  mobile — text stays first in reading order at every width). A second illustration was
+ *  mobile – text stays first in reading order at every width). A second illustration was
  *  tried on the support card below but dropped: two similar figures stacked in one
  *  section read as repetitive rather than rich, so the card keeps its plain icon. The
  *  accordion answers the searchable questions; the card beside it is for the one question
@@ -74,10 +74,10 @@ export function Faq() {
             Email us directly and we&rsquo;ll get back to you.
           </p>
           <a
-            href="mailto:outreach.grydin@gmail.com?subject=Qualifyr%20question"
+            href="mailto:hello@grydin.co?subject=Qualifyr%20question"
             className="mt-4 inline-block text-sm font-medium text-brand underline-offset-4 hover:underline"
           >
-            outreach.grydin@gmail.com
+            hello@grydin.co
           </a>
         </div>
       </div>

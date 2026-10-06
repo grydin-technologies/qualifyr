@@ -5,7 +5,7 @@ const rows = [
   {
     task: "Finding companies to reach out to",
     without: "A directory, scrolled by hand",
-    with: "Auto-discovered from 8 public sources",
+    with: "Auto-discovered from various sources",
   },
   {
     task: "Telling buyers from vendors",
@@ -47,7 +47,7 @@ export function ComparisonTable() {
             What most teams do today, vs. Qualifyr
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Not a competitor comparison &mdash; a comparison against how this actually gets
+            Not a competitor comparison &ndash; a comparison against how this actually gets
             done without a tool.
           </p>
         </div>

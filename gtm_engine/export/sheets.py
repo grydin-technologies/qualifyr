@@ -34,14 +34,14 @@ def access_token() -> str:
     """Service-account bearer token via google-auth (optional extra `sheets`).
 
     Turns the three ways this fails into one clear, actionable message each, instead of a raw
-    google-auth traceback: unparseable JSON, a key missing required fields, and — the common
-    one — Google rejecting the identity ("invalid_grant: account not found"), which means the
+    google-auth traceback: unparseable JSON, a key missing required fields, and – the common
+    one – Google rejecting the identity ("invalid_grant: account not found"), which means the
     service account was deleted or the key is stale and must be recreated."""
     try:
         info = json.loads(os.environ["GTM_SHEETS_CREDENTIALS_JSON"])
     except json.JSONDecodeError as exc:
         raise RuntimeError(
-            "GTM_SHEETS_CREDENTIALS_JSON is not valid JSON — paste the service-account key "
+            "GTM_SHEETS_CREDENTIALS_JSON is not valid JSON – paste the service-account key "
             "file's full contents into the secret."
         ) from exc
 

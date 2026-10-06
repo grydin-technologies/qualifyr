@@ -16,9 +16,9 @@ DEFAULT_LIMITS: dict[str, int] = {
     "hunter": 10,
     "places": 20,
     # Campaign-run dispatches per day. Each run is also bounded by the per-run lead cap and the
-    # one-run-at-a-time guard, so this is a backstop against dispatching many runs to burn CI
-    # minutes / shared API budget. Comfortably above any real free-tier usage.
-    "runs": 25,
+    # one-run-at-a-time guard. On grydinteam (open-source) all runs share the repo's GitHub
+    # Actions minutes, so this is tight by design.
+    "runs": 3,
 }
 
 

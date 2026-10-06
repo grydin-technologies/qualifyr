@@ -115,15 +115,15 @@ def verify_request(request: Request) -> dict | None:
     except jwt.ExpiredSignatureError:
         raise HTTPException(401, "token expired", headers={"WWW-Authenticate": "Bearer"})
     except jwt.PyJWTError as exc:
-        # Do not echo the reason back: it tells an attacker which part of a forged token
-        # to fix next. The detail goes to the log instead.
         log.info("rejected token on %s: %s", request.url.path, exc)
-        raise HTTPException(401, "invalid token", headers={"WWW-Authenticate": "Bearer"})
+        # Include the error class so the operator can diagnose JWKS/issuer/audience mismatches
+        # from the browser console without needing server logs.
+        raise HTTPException(401, f"invalid token ({type(exc).__name__})", headers={"WWW-Authenticate": "Bearer"})
 
 
 def current_user_id(request: Request) -> str | None:
     """The signed-in user's id (the token's `sub`), or None when auth is disabled or bypassed
-    (local operator, tests). None means 'no scoping' — the caller sees everything, which keeps
+    (local operator, tests). None means 'no scoping' – the caller sees everything, which keeps
     single-operator and test behaviour exactly as before multi-tenancy."""
     user = getattr(request.state, "user", None)
     return user.get("sub") if isinstance(user, dict) else None

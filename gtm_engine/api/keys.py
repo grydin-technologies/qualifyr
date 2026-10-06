@@ -36,18 +36,18 @@ def _fernet() -> Fernet | None:
 def encrypt_key(plaintext: str) -> str:
     f = _fernet()
     if f is None:
-        raise RuntimeError("GTM_ENCRYPTION_KEY is not set — cannot encrypt API keys")
+        raise RuntimeError("GTM_ENCRYPTION_KEY is not set – cannot encrypt API keys")
     return f.encrypt(plaintext.encode()).decode()
 
 
 def decrypt_key(ciphertext: str) -> str:
     f = _fernet()
     if f is None:
-        raise RuntimeError("GTM_ENCRYPTION_KEY is not set — cannot decrypt API keys")
+        raise RuntimeError("GTM_ENCRYPTION_KEY is not set – cannot decrypt API keys")
     try:
         return f.decrypt(ciphertext.encode()).decode()
     except InvalidToken:
-        raise ValueError("failed to decrypt API key — encryption key may have changed")
+        raise ValueError("failed to decrypt API key – encryption key may have changed")
 
 
 def encryption_available() -> bool:

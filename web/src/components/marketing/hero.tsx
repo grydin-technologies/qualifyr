@@ -27,9 +27,8 @@ export function Hero() {
         </h1>
 
         <p className="qf-rise mx-auto mt-6 max-w-2xl text-lg text-muted-foreground" style={{ animationDelay: "160ms" }}>
-          Qualifyr discovers companies from free public sources, rejects the agencies and
-          vendors, finds a decision-maker, and scores every lead 0&ndash;100 with a reason you
-          can read.
+          Qualifyr discovers companies from various sources, rejects the agencies and
+          vendors, finds a decision-maker, and scores every lead 0&ndash;100 with clear reasoning.
         </p>
 
         <div className="qf-rise mt-10 flex items-center justify-center gap-3" style={{ animationDelay: "240ms" }}>
@@ -47,7 +46,7 @@ export function Hero() {
         </div>
 
         <p className="qf-rise mt-4 text-xs text-muted-foreground" style={{ animationDelay: "320ms" }}>
-          Free to start &mdash; no credit card required.
+          Free to start &ndash; no credit card required.
         </p>
       </div>
 

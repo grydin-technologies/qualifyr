@@ -45,7 +45,7 @@ _EMAIL_STATUS_LABELS = {
     "mx_valid": "Valid (domain accepts mail)",
     "generic": "Generic mailbox (info@/sales@)",
     "deliverable": "Verified deliverable",
-    "candidate": "Guessed — unconfirmed",
+    "candidate": "Guessed – unconfirmed",
     "unverified": "Unverified",
     "risky": "Risky / catch-all",
     "invalid": "Invalid",

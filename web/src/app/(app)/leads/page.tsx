@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { Download, Ban, ExternalLink } from "lucide-react"
+import { Download, Ban, ExternalLink, Maximize2, Minimize2 } from "lucide-react"
+import { cn } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
@@ -25,6 +26,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 
 function LeadDetail({ leadId, onClose, onChanged }: { leadId: string | null; onClose: () => void; onChanged: () => void }) {
   const [lead, setLead] = React.useState<Lead | null>(null)
+  const [expanded, setExpanded] = React.useState(false)
   React.useEffect(() => {
     if (!leadId) { setLead(null); return }
     api.lead(leadId).then(setLead).catch(() => setLead(null))
@@ -39,7 +41,16 @@ function LeadDetail({ leadId, onClose, onChanged }: { leadId: string | null; onC
 
   return (
     <Sheet open={!!leadId} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-xl">
+      <SheetContent side="right" className={cn("w-full overflow-y-auto transition-[max-width] duration-200", expanded ? "sm:max-w-4xl" : "sm:max-w-xl")}>
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="absolute top-3 right-11 inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted"
+          title={expanded ? "Collapse" : "Expand"}
+        >
+          {expanded ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
+          <span className="sr-only">{expanded ? "Collapse" : "Expand"} panel</span>
+        </button>
         <SheetHeader>
           <SheetTitle>{lead?.company_name ?? "…"}</SheetTitle>
         </SheetHeader>
@@ -82,7 +93,7 @@ function LeadDetail({ leadId, onClose, onChanged }: { leadId: string | null; onC
               <section>
                 <h3 className="mb-1 text-sm font-semibold">Their reply</h3>
                 <p className="rounded-lg bg-muted/50 p-3 text-sm">{lead.reply_excerpt}</p>
-                {lead.referred_contact && <Row label="Referred to" value={`${lead.referred_contact.email}${lead.referred_contact.name ? ` (${lead.referred_contact.name})` : ""} — ${lead.referred_contact.status}`} />}
+                {lead.referred_contact && <Row label="Referred to" value={`${lead.referred_contact.email}${lead.referred_contact.name ? ` (${lead.referred_contact.name})` : ""} – ${lead.referred_contact.status}`} />}
               </section>
             )}
             <section>
@@ -100,7 +111,7 @@ function LeadDetail({ leadId, onClose, onChanged }: { leadId: string | null; onC
               <Row label="Role" value={lead.contact_role} />
               <Row label="Email" value={lead.contact_email && <span>{lead.contact_email} <EmailStatusBadge status={lead.email_status} /></span>} />
               <Row label="Phone" value={lead.phone && <span>{lead.phone}{lead.phone_type && <Badge variant="outline" className="ml-2">{lead.phone_type}</Badge>}</span>} />
-              <Row label="Candidate email" value={lead.candidate_email && <span>{lead.candidate_email} <Badge variant="outline">unconfirmed — not sent</Badge></span>} />
+              <Row label="Candidate email" value={lead.candidate_email && <span>{lead.candidate_email} <Badge variant="outline">unconfirmed – not sent</Badge></span>} />
               <Row label="Profile" value={lead.linkedin_or_public_profile_url && <a className="underline" href={lead.linkedin_or_public_profile_url} target="_blank" rel="noreferrer">{lead.linkedin_or_public_profile_url}</a>} />
             </section>
             <section>
@@ -129,7 +140,7 @@ function LeadDetail({ leadId, onClose, onChanged }: { leadId: string | null; onC
                 <h3 className="mb-1 text-sm font-semibold">Activity</h3>
                 {lead.events.map((e) => (
                   <div key={e.event_id} className="py-1 text-xs text-muted-foreground">
-                    {new Date(e.created_at).toLocaleString()} — {e.event_type}{e.step ? ` (${e.step})` : ""}{e.detail ? `: ${e.detail}` : ""}
+                    {new Date(e.created_at).toLocaleString()} – {e.event_type}{e.step ? ` (${e.step})` : ""}{e.detail ? `: ${e.detail}` : ""}
                   </div>
                 ))}
               </section>
@@ -269,7 +280,7 @@ export default function LeadsPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-col">
-                      <span>{l.contact_name ?? <span className="text-muted-foreground">—</span>}</span>
+                      <span>{l.contact_name ?? <span className="text-muted-foreground">–</span>}</span>
                       <span className="text-xs text-muted-foreground">{l.contact_role ?? ""}</span>
                     </div>
                   </TableCell>
@@ -277,7 +288,7 @@ export default function LeadsPage() {
                   <TableCell><TypeBadge type={l.company_type} /></TableCell>
                   <TableCell>
                     <div className="flex flex-col gap-1">
-                      <span className="text-xs">{l.contact_email ?? "—"}</span>
+                      <span className="text-xs">{l.contact_email ?? "–"}</span>
                       {l.contact_email && <EmailStatusBadge status={l.email_status} />}
                     </div>
                   </TableCell>

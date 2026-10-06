@@ -28,7 +28,7 @@ _JUNK_DOMAINS = {"example.com", "email.com", "domain.com", "yourdomain.com", "se
 def _mangled(email: str, source: str) -> bool:
     """True when the matched address is a fragment of something with non-ASCII characters
     (Cyrillic lookalikes, zero-width joiners). 'іnfo@x.pk' would otherwise be harvested as
-    'nfo@x.pk' — an address that silently bounces."""
+    'nfo@x.pk' – an address that silently bounces."""
     i = source.lower().find(email)
     if i <= 0:
         return False

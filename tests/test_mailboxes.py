@@ -72,7 +72,7 @@ def test_load_numbered_mailboxes_and_legacy_fallback():
     legacy = load_mailboxes({"GTM_SMTP_USER": "me@gmail.com", "GTM_SMTP_PASSWORD": "p"})
     assert len(legacy) == 1 and legacy[0].address == "me@gmail.com" and legacy[0].can_send
     assert load_mailboxes({}) == []
-    # The user's real layout: legacy vars as #1 plus GTM_MAILBOX_2_* — both must load, in order.
+    # The user's real layout: legacy vars as #1 plus GTM_MAILBOX_2_* – both must load, in order.
     mixed = load_mailboxes({"GTM_SMTP_USER": "me@gmail.com", "GTM_SMTP_PASSWORD": "p",
                             "GTM_MAILBOX_2_USER": "second@gmail.com", "GTM_MAILBOX_2_PASSWORD": "q"})
     assert [b.address for b in mixed] == ["me@gmail.com", "second@gmail.com"] and all(b.can_send for b in mixed)

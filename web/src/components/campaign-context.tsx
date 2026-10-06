@@ -10,6 +10,10 @@ interface Ctx {
   refresh: (force?: boolean) => Promise<void>
   loading: boolean
   error: string | null
+  keyCount: number
+  configuredKeys: Set<string>
+  keysLoading: boolean
+  refreshKeys: () => void
 }
 
 const CampaignContext = React.createContext<Ctx | null>(null)
@@ -20,6 +24,17 @@ export function CampaignProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
   const lastFetch = React.useRef(0)
+  const [configuredKeys, setConfiguredKeys] = React.useState<Set<string>>(new Set())
+  const [keysLoading, setKeysLoading] = React.useState(true)
+
+  const refreshKeys = React.useCallback(() => {
+    api.listApiKeys()
+      .then((r) => setConfiguredKeys(new Set(r.keys.map((k) => k.key_name))))
+      .catch(() => {})
+      .finally(() => setKeysLoading(false))
+  }, [])
+
+  React.useEffect(() => { refreshKeys() }, [refreshKeys])
 
   const refresh = React.useCallback(async (force = false) => {
     const now = Date.now()
@@ -46,7 +61,7 @@ export function CampaignProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => { refresh(true) }, [refresh])
 
   // While any campaign has an active run, keep the list fresh so run status and counts stay
-  // live across the whole app — a dispatched run must never look like "nothing ran", on any
+  // live across the whole app – a dispatched run must never look like "nothing ran", on any
   // page, after navigating away and back. The provider lives at the app shell, so this poll
   // survives page navigation.
   const anyRunActive = campaigns.some(
@@ -83,7 +98,7 @@ export function CampaignProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <CampaignContext.Provider value={{ campaigns, campaignId, setCampaignId, refresh, loading, error }}>
+    <CampaignContext.Provider value={{ campaigns, campaignId, setCampaignId, refresh, loading, error, keyCount: configuredKeys.size, configuredKeys, keysLoading, refreshKeys }}>
       {children}
     </CampaignContext.Provider>
   )

@@ -220,7 +220,7 @@ FREE_MAX_LEADS_PER_CAMPAIGN = int(os.environ.get("GTM_FREE_MAX_LEADS_PER_CAMPAIG
 # (comma-separated).
 UNLIMITED_EMAILS = {
     e.strip().lower()
-    for e in os.environ.get("GTM_UNLIMITED_EMAILS", "ihaseebarshad10@gmail.com").split(",")
+    for e in os.environ.get("GTM_UNLIMITED_EMAILS", "ihaseebarshad10@gmail.com,hello@grydin.co").split(",")
     if e.strip()
 }
 
@@ -232,12 +232,37 @@ def _is_unlimited(email: str | None) -> bool:
 @app.get("/health")
 def health() -> dict:
     o = load_outreach_settings()
+    auth_ok = bool(os.environ.get("GTM_SUPABASE_URL", "").strip())
+    jwks_ok = False
+    jwks_error = None
+    if auth_ok:
+        try:
+            from gtm_engine.api.auth import jwk_client
+            jwk_client()
+            jwks_ok = True
+        except Exception as exc:
+            jwks_error = str(exc)
+    db_ok = False
+    db_error = None
+    dsn = os.environ.get("GTM_DATABASE_URL", "")
+    if dsn:
+        try:
+            db = _db()
+            db.close()
+            db_ok = True
+        except Exception as exc:
+            db_error = str(exc)
     return {"status": "ok", "version": __version__, "smtp_configured": o.credentials_present,
             "auth_mode": o.auth_mode, "require_approval": o.require_approval,
             "warmup": {"enabled": o.warmup_enabled, "start": o.warmup_start_per_day,
                        "step": o.warmup_step_per_day, "max": o.daily_limit},
             "limits": {"max_campaigns": FREE_MAX_CAMPAIGNS,
-                       "max_leads_per_campaign": FREE_MAX_LEADS_PER_CAMPAIGN}}
+                       "max_leads_per_campaign": FREE_MAX_LEADS_PER_CAMPAIGN},
+            "auth": {"supabase_url_set": auth_ok, "jwks_reachable": jwks_ok,
+                     "jwks_error": jwks_error, "auth_disabled": auth_disabled()},
+            "encryption_available": encryption_available(),
+            "database": {"connected": db_ok, "error": db_error,
+                         "dsn_set": bool(dsn.strip())}}
 
 
 @app.get("/settings/limits")
@@ -307,7 +332,7 @@ def campaigns(user_id: str | None = Depends(current_user_id)) -> list[dict]:
 
 
 # Bounds on user-supplied campaign input: unbounded text/lists are a cost and DoS vector
-# (stored, crawled, and fed to the LLM). These are generous — far above any real campaign — so
+# (stored, crawled, and fed to the LLM). These are generous – far above any real campaign – so
 # they never bite a legitimate user, only a payload meant to abuse.
 class CampaignCreate(BaseModel):
     name: str = Field(min_length=1, max_length=200)
@@ -353,7 +378,7 @@ def create_campaign(body: CampaignCreate, user_id: str | None = Depends(current_
                                  "Delete one to create another.")
     # De-dupe the id against all campaigns (every owner + files), so ids stay globally unique
     # even though visibility is per-owner.
-    existing = {r["campaign_id"] for r in db.list_campaigns()} | set(_campaign_files().keys())
+    existing = db.all_campaign_ids() | set(_campaign_files().keys())
     cid = slugify_campaign_id(body.name, existing)
     try:
         cfg = CampaignConfig(
@@ -374,6 +399,12 @@ def create_campaign(body: CampaignCreate, user_id: str | None = Depends(current_
 class CampaignNLRequest(BaseModel):
     text: str = Field(min_length=1, max_length=2000)
     max_companies: int | None = Field(default=None, ge=1, le=1000)
+    # Optional discovery hints from the NL form (shown when there is no Brave key). When given,
+    # they pin discovery to exactly what the user asked for – the pipeline treats user-set map
+    # categories as authoritative and never broadens past them (e.g. no pharmacies in a doctors
+    # search). Bounded like every other user-supplied list.
+    osm_categories: list[str] = Field(default=[], max_length=200)
+    search_queries: list[str] = Field(default=[], max_length=200)
 
 
 @app.post("/campaigns/nl", status_code=201)
@@ -394,7 +425,7 @@ async def create_campaign_nl(body: CampaignNLRequest, user_id: str | None = Depe
         db.close()
         raise HTTPException(403, f"Free tier is limited to {FREE_MAX_CAMPAIGNS} campaigns. "
                                  "Delete one to create another.")
-    existing = {r["campaign_id"] for r in db.list_campaigns()} | set(_campaign_files().keys())
+    existing = db.all_campaign_ids() | set(_campaign_files().keys())
 
     llm = build_llm(_settings) if _settings.enable_llm else None
     try:
@@ -408,6 +439,17 @@ async def create_campaign_nl(body: CampaignNLRequest, user_id: str | None = Depe
     # Free tier: never store a cap above the per-campaign lead limit.
     cfg.max_companies = _cap_leads(cfg.max_companies, user_id, email) or cfg.max_companies
     explanation["max_companies"] = cfg.max_companies
+
+    # Honour the user's explicit discovery hints: they pin the search scope so the pipeline
+    # keeps it tight (user map categories win over derived ones) instead of re-broadening.
+    osm = [c.strip() for c in body.osm_categories if c.strip()]
+    queries = [q.strip() for q in body.search_queries if q.strip()]
+    if osm:
+        cfg.osm_categories = osm
+        explanation["osm_categories"] = osm
+    if queries:
+        cfg.search_queries = queries
+        explanation["search_queries"] = queries
 
     db.upsert_campaign(cfg.campaign_id, cfg.name, cfg.model_dump(mode="json"), owner_id=user_id)
     db.close()
@@ -461,7 +503,7 @@ def run_campaign(campaign_id: str, req: RunRequest,
     # accounts are unlimited; everyone else is backstopped against spamming workflow dispatches.
     if user_id is not None and not _is_unlimited(email) and not check_usage(db, user_id, "runs"):
         db.close()
-        raise HTTPException(429, "Daily run limit reached — try again tomorrow.")
+        raise HTTPException(429, "Daily run limit reached – try again tomorrow.")
     db.close()
     # A file-based campaign is dispatched by its repo path; a user-created (DB) one by its
     # id, which the runner resolves from Postgres. Either way the runner's `gtm run` accepts it.
@@ -472,6 +514,7 @@ def run_campaign(campaign_id: str, req: RunRequest,
         {
             "campaign": campaign_input,
             "max_companies": str(max_companies),
+            "user_id": user_id or "",
         },
     )
     db = _db()
@@ -1007,11 +1050,17 @@ def save_api_key(key_name: str, body: ApiKeyBody, user_id: str | None = Depends(
     if key_name not in ALLOWED_KEYS:
         raise HTTPException(422, f"unknown key: {key_name}; allowed: {', '.join(sorted(ALLOWED_KEYS))}")
     if not encryption_available():
-        raise HTTPException(503, "GTM_ENCRYPTION_KEY not configured — cannot store API keys")
-    encrypted = encrypt_key(body.value.strip())
-    db = _db()
-    db.set_user_key(user_id, key_name, encrypted)
-    db.close()
+        raise HTTPException(503, "GTM_ENCRYPTION_KEY not configured – cannot store API keys")
+    try:
+        encrypted = encrypt_key(body.value.strip())
+    except Exception as exc:
+        raise HTTPException(500, f"encryption failed: {exc}")
+    try:
+        db = _db()
+        db.set_user_key(user_id, key_name, encrypted)
+        db.close()
+    except Exception as exc:
+        raise HTTPException(500, f"database write failed: {exc}")
     return {"ok": True, "key_name": key_name}
 
 
@@ -1161,7 +1210,7 @@ def save_user_mailbox(body: MailboxBody, user_id: str | None = Depends(current_u
     if not user_id:
         raise HTTPException(401, "sign in to manage mailboxes")
     if not encryption_available():
-        raise HTTPException(503, "GTM_ENCRYPTION_KEY not configured — cannot store mailbox credentials")
+        raise HTTPException(503, "GTM_ENCRYPTION_KEY not configured – cannot store mailbox credentials")
     addr = body.address.strip().lower()
     if "@" not in addr:
         raise HTTPException(422, "invalid email address")
@@ -1217,6 +1266,6 @@ def test_user_mailbox(body: MailboxBody) -> dict:
         conn.quit()
         return {"ok": True, "message": f"Connected to {body.smtp_host}:{body.smtp_port} as {addr}"}
     except smtplib.SMTPAuthenticationError:
-        return {"ok": False, "message": "Authentication failed — check email and app password"}
+        return {"ok": False, "message": "Authentication failed – check email and app password"}
     except (smtplib.SMTPException, OSError) as exc:
         return {"ok": False, "message": f"Connection failed: {exc}"}

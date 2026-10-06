@@ -137,11 +137,16 @@ def test_campaign_id_dedup_is_global_so_owners_cannot_collide(world):
     assert act_as("user-a").get(f"/campaigns/{b}").status_code == 404
 
 
+# Extreme / malformed input must be handled gracefully – never a 500. Since the input bounds
+# landed (name/offer length, list caps, min_score 0-100, max_companies 1-1000), out-of-range
+# values are rejected cleanly with 422 rather than silently clamped. A valid in-bounds body
+# still succeeds (201). The invariant the test protects is "no 500 / no unbounded payload".
 @pytest.mark.parametrize("body,expect", [
-    ({"name": "N", "offer": "o", "min_score": -5}, 201),          # pydantic clamps/accepts; must not 500
-    ({"name": "N", "offer": "o", "max_companies": 10**9}, 201),
-    ({"name": "N" * 5000, "offer": "o"}, 201),
-    ({"name": "N", "offer": "o", "cities": ["a"] * 500}, 201),
+    ({"name": "N", "offer": "o", "min_score": -5}, 422),          # below the 0-100 range
+    ({"name": "N", "offer": "o", "max_companies": 10**9}, 422),   # above the 1-1000 cap
+    ({"name": "N" * 5000, "offer": "o"}, 422),                    # name over 200 chars
+    ({"name": "N", "offer": "o", "cities": ["a"] * 500}, 422),    # list over its cap
+    ({"name": "N", "offer": "o", "min_score": 80}, 201),          # in-bounds body still creates
     ({"name": "N"}, 422),                                          # offer missing
     ({"offer": "o"}, 422),                                         # name missing
     ({"name": "N", "offer": "o", "min_score": "high"}, 422),      # wrong type
@@ -150,3 +155,4 @@ def test_create_campaign_handles_extreme_and_malformed_input(world, body, expect
     act_as, _, _ = world
     r = act_as("user-a").post("/campaigns", json=body)
     assert r.status_code == expect, r.text
+    assert r.status_code != 500

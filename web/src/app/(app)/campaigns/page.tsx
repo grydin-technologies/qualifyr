@@ -2,7 +2,8 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { Play, Download, Plus, Trash2, Pencil } from "lucide-react"
+import { Play, Download, Plus, Trash2, Pencil, Maximize2, Minimize2 } from "lucide-react"
+import { cn } from "@/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,7 +13,20 @@ import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { api, type Campaign, type Progress as RunProgress } from "@/lib/api"
 import { useCampaign } from "@/components/campaign-context"
-import { cn } from "@/lib/utils"
+
+function ExpandButton({ expanded, onToggle }: { expanded: boolean; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="absolute top-3 right-11 inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted"
+      title={expanded ? "Collapse" : "Expand"}
+    >
+      {expanded ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
+      <span className="sr-only">{expanded ? "Collapse" : "Expand"} panel</span>
+    </button>
+  )
+}
 
 function NewCampaign({ open, onClose, onCreated }: { open: boolean; onClose: () => void; onCreated: (campaignId: string) => void }) {
   // NL mode state
@@ -35,6 +49,7 @@ function NewCampaign({ open, onClose, onCreated }: { open: boolean; onClose: () 
   const [hasBrave, setHasBrave] = React.useState<boolean | null>(null)
   // Free-tier per-campaign lead cap, read from the backend (not hardcoded).
   const [maxLeads, setMaxLeads] = React.useState<number | null>(null)
+  const [expanded, setExpanded] = React.useState(false)
 
   React.useEffect(() => {
     if (!open) return
@@ -54,7 +69,12 @@ function NewCampaign({ open, onClose, onCreated }: { open: boolean; onClose: () 
     setBusy(true)
     try {
       const mc = maxCo.trim() ? parseInt(maxCo, 10) : undefined
-      const res = await api.createCampaignNL(text.trim(), mc ? { max_companies: mc } : undefined)
+      const split = (s: string) => s.split(",").map((t) => t.trim()).filter(Boolean)
+      const res = await api.createCampaignNL(text.trim(), {
+        ...(mc ? { max_companies: mc } : {}),
+        ...(categories.trim() ? { osm_categories: split(categories) } : {}),
+        ...(searchQueries.trim() ? { search_queries: split(searchQueries) } : {}),
+      })
       setResult({ campaignId: res.campaign_id, config: res.config, explanation: res.explanation })
       const returned = typeof res.explanation === "object" && res.explanation?.max_companies
       if (returned) setMaxCo(String(returned))
@@ -119,7 +139,8 @@ function NewCampaign({ open, onClose, onCreated }: { open: boolean; onClose: () 
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && close()}>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-lg">
+      <SheetContent side="right" className={cn("w-full overflow-y-auto transition-[max-width] duration-200", expanded ? "sm:max-w-3xl" : "sm:max-w-lg")}>
+        <ExpandButton expanded={expanded} onToggle={() => setExpanded((v) => !v)} />
         <SheetHeader><SheetTitle>New campaign</SheetTitle></SheetHeader>
         <div className="flex flex-col gap-4 p-4 pt-0">
           {loading ? (
@@ -136,7 +157,7 @@ function NewCampaign({ open, onClose, onCreated }: { open: boolean; onClose: () 
               />
               {!hasBrave && !result && (
                 <div className="rounded-lg border border-dashed p-3 grid gap-2">
-                  <p className="text-xs font-medium text-muted-foreground">No Brave API key — provide search hints to improve discovery:</p>
+                  <p className="text-xs font-medium text-muted-foreground">No Brave API key – provide search hints to improve discovery:</p>
                   <Input
                     value={categories}
                     onChange={(e) => setCategories(e.target.value)}
@@ -164,7 +185,7 @@ function NewCampaign({ open, onClose, onCreated }: { open: boolean; onClose: () 
           ) : (
             <>
               <div className="rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950/30 p-3">
-                <p className="text-xs text-blue-700 dark:text-blue-300">Add a <strong>Groq API key</strong> in Settings → API Keys to unlock automatic mode — describe what you want in plain English and the engine handles the rest.</p>
+                <p className="text-xs text-blue-700 dark:text-blue-300">Add a <strong>Groq API key</strong> in Settings → API Keys to unlock automatic mode – describe what you want in plain English and the engine handles the rest.</p>
               </div>
               <div className="grid gap-3">
                 <div className="grid gap-1.5">
@@ -261,6 +282,7 @@ function EditCampaign({ campaign, open, onClose, onSaved }: { campaign: Campaign
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [raw, setRaw] = React.useState<Record<string, unknown>>({})
+  const [expanded, setExpanded] = React.useState(false)
 
   React.useEffect(() => {
     if (!open) return
@@ -313,7 +335,8 @@ function EditCampaign({ campaign, open, onClose, onSaved }: { campaign: Campaign
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-lg">
+      <SheetContent side="right" className={cn("w-full overflow-y-auto transition-[max-width] duration-200", expanded ? "sm:max-w-3xl" : "sm:max-w-lg")}>
+        <ExpandButton expanded={expanded} onToggle={() => setExpanded((v) => !v)} />
         <SheetHeader><SheetTitle>Edit campaign</SheetTitle></SheetHeader>
         <div className="flex flex-col gap-4 p-4 pt-0">
           {loading ? <p className="text-sm text-muted-foreground">Loading config…</p> : (
@@ -469,13 +492,15 @@ function yamlVal(v: unknown): string {
 }
 
 function RunPanel({ campaign, onFinished }: { campaign: Campaign; onFinished: () => void }) {
+  const { keyCount } = useCampaign()
   const [max, setMax] = React.useState(String(campaign.max_companies))
   const [progress, setProgress] = React.useState<RunProgress | null>(campaign.live)
   const [error, setError] = React.useState<string | null>(null)
   const running = progress && !["idle", "completed", "failed"].includes(progress.stage)
+  const noKeys = keyCount === 0
 
   // Adopt the server's live status whenever the campaign list refreshes (e.g. after returning
-  // to the page) — unless a local poll is already tracking an active run, so finer-grained
+  // to the page) – unless a local poll is already tracking an active run, so finer-grained
   // local progress is never clobbered by a slightly older list snapshot. This is what stops a
   // dispatched/running campaign from rendering as "nothing ran" after navigation.
   React.useEffect(() => {
@@ -516,7 +541,7 @@ function RunPanel({ campaign, onFinished }: { campaign: Campaign; onFinished: ()
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
         <Input className="w-20 h-8 text-sm" value={max} onChange={(e) => setMax(e.target.value)} disabled={!!running} />
-        <Button size="sm" onClick={start} disabled={!!running}>
+        <Button size="sm" onClick={start} disabled={!!running || noKeys} title={noKeys ? "Add at least one API key in Settings first" : undefined}>
           <Play className="size-3.5" /> {running ? "Running…" : "Run"}
         </Button>
         <Button size="sm" variant="outline" onClick={() => api.downloadExport(campaign.campaign_id, { min_score: campaign.min_score })}>
@@ -670,7 +695,7 @@ export default function CampaignsPage() {
                 </div>
               </div>
 
-              {/* Last run — compact meta with a status dot */}
+              {/* Last run – compact meta with a status dot */}
               <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
                 <span className={cn("size-1.5 rounded-full", statusDotClass(c.last_run?.status))} />
                 {c.last_run

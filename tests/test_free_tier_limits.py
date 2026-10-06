@@ -91,3 +91,38 @@ def test_master_account_is_unlimited(master_client):
     # Lead cap is not clamped for a master account.
     cid = _create(master_client, "Big", max_companies=200).json()["campaign_id"]
     assert master_client.get(f"/campaigns/{cid}").json()["max_companies"] == 200
+
+
+def test_delete_is_soft_and_row_persists(client, settings):
+    """Deleting a campaign is a soft delete: it leaves the UI list but its row stays in the
+    database permanently. A later create never resurrects it (fresh id)."""
+    cid = _create(client, "Keep Me Forever").json()["campaign_id"]
+    assert any(c["campaign_id"] == cid for c in client.get("/campaigns").json())
+
+    assert client.delete(f"/campaigns/{cid}").status_code == 204
+
+    # Gone from the list the user sees...
+    assert not any(c["campaign_id"] == cid for c in client.get("/campaigns").json())
+    # ...but the row is still in the database, for good.
+    db = Database(settings.database_url)
+    assert cid in db.all_campaign_ids()
+    assert not any(c["campaign_id"] == cid for c in db.list_campaigns())
+    db.close()
+
+    # Recreating with the same name gets a NEW id – the kept row is never overwritten.
+    cid2 = _create(client, "Keep Me Forever").json()["campaign_id"]
+    assert cid2 != cid
+
+
+def test_nl_honours_discovery_hints(client):
+    """OSM/search hints from the NL form pin discovery scope – the pipeline treats user map
+    categories as authoritative, so e.g. a doctors search never re-broadens to pharmacies."""
+    r = client.post("/campaigns/nl", json={
+        "text": "find doctors in G-11 Islamabad",
+        "osm_categories": ["amenity=doctors", "amenity=clinic"],
+        "search_queries": ["doctors G-11 Islamabad"],
+    })
+    assert r.status_code == 201, r.text
+    cfg = client.get(f"/campaigns/{r.json()['campaign_id']}").json()
+    assert cfg["osm_categories"] == ["amenity=doctors", "amenity=clinic"]
+    assert "doctors G-11 Islamabad" in cfg["search_queries"]

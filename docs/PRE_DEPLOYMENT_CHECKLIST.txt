@@ -1,10 +1,10 @@
 ================================================================================
-PRE-DEPLOYMENT AUDIT METHODOLOGY — ENTERPRISE / PRODUCTION-GRADE PLATFORMS
+PRE-DEPLOYMENT AUDIT METHODOLOGY – ENTERPRISE / PRODUCTION-GRADE PLATFORMS
 ================================================================================
 A generic, stack-agnostic checklist for gating a web platform before it ships
 (or before it goes public / open source). Work top to bottom; the order is
 roughly "biggest blast radius first." Nothing here is a substitute for a
-dedicated pentest on a high-stakes system — this is the engineer's own gate
+dedicated pentest on a high-stakes system – this is the engineer's own gate
 that catches the 90% of issues that never need one.
 
 GUIDING PRINCIPLES
@@ -19,11 +19,11 @@ GUIDING PRINCIPLES
     scraped page, a third-party API, a file, or a DB row is untrusted input.
 5.  SEPARATE "WORKS" FROM "SAFE." Tests green != shippable. A feature can work
     perfectly and still leak every tenant's data.
-6.  DOCUMENT THE GOOD, NOT JUST THE BAD. State what you verified as solid —
+6.  DOCUMENT THE GOOD, NOT JUST THE BAD. State what you verified as solid –
     that is what gives the team confidence to ship.
 
 ================================================================================
-PHASE 0 — ESTABLISH THE MAP
+PHASE 0 – ESTABLISH THE MAP
 ================================================================================
 [ ] Identify the trust boundaries: what runs public, what runs internal, what
     runs in CI, what the client sees vs. the server holds.
@@ -35,7 +35,7 @@ PHASE 0 — ESTABLISH THE MAP
     This sets how hard each later check matters.
 
 ================================================================================
-PHASE 1 — AUTHENTICATION & AUTHORIZATION  (highest priority)
+PHASE 1 – AUTHENTICATION & AUTHORIZATION  (highest priority)
 ================================================================================
 [ ] Is auth enforced GLOBALLY by default (one app-wide gate), not per-route by
     memory? A route added tomorrow must be protected without anyone remembering.
@@ -44,7 +44,7 @@ PHASE 1 — AUTHENTICATION & AUTHORIZATION  (highest priority)
     algorithm (reject "alg: none" and algorithm-confusion).
 [ ] Fail closed: missing auth config => deny all, loudly. Never "unconfigured
     = allow."
-[ ] AUTHORIZATION (IDOR) — the #1 real-world web vuln. For EVERY object a user
+[ ] AUTHORIZATION (IDOR) – the #1 real-world web vuln. For EVERY object a user
     can reference by id (account, order, file, campaign, message):
         - Does the query filter by owner/tenant, or just by the id?
         - Try to read AND mutate another user's object by changing the id.
@@ -58,7 +58,7 @@ PHASE 1 — AUTHENTICATION & AUTHORIZATION  (highest priority)
     by accident in prod, and logs loudly when active.
 
 ================================================================================
-PHASE 2 — INJECTION & UNTRUSTED INPUT
+PHASE 2 – INJECTION & UNTRUSTED INPUT
 ================================================================================
 [ ] SQL: 100% parameterized. Grep for string-formatted queries
     (f-strings, %, + , .format) feeding execute(). Dynamic column/table names
@@ -77,11 +77,11 @@ PHASE 2 — INJECTION & UNTRUSTED INPUT
     against an allowlist).
 
 ================================================================================
-PHASE 3 — SECRETS & CREDENTIAL MANAGEMENT
+PHASE 3 – SECRETS & CREDENTIAL MANAGEMENT
 ================================================================================
 [ ] No secrets in source, git history, client bundles, logs, or error bodies.
     Grep history for keys/connection-strings. Remember: secret values are NOT
-    readable back from a secrets manager — copying requires the plaintext.
+    readable back from a secrets manager – copying requires the plaintext.
 [ ] Secrets injected via env/secret manager, never committed. .env is
     gitignored AND was never committed historically.
 [ ] Secrets at rest are encrypted (per-user secrets with a strong KDF/Fernet/
@@ -92,13 +92,13 @@ PHASE 3 — SECRETS & CREDENTIAL MANAGEMENT
 [ ] Third-party keys are least-privilege and scoped (read-only where possible).
 
 ================================================================================
-PHASE 4 — DATA PROTECTION & PRIVACY
+PHASE 4 – DATA PROTECTION & PRIVACY
 ================================================================================
 [ ] PII inventory: know every field of personal data and why it's kept.
 [ ] Encryption in transit (TLS everywhere) and at rest for sensitive stores.
 [ ] Before going PUBLIC / open source: scrub real customer data, scraped PII,
     exports, and ledgers from the repo AND its history (orphan commit or
-    history filter — a new "removal" commit does NOT remove it from old
+    history filter – a new "removal" commit does NOT remove it from old
     commits).
 [ ] Data retention & deletion: a user can be deleted; their data actually goes.
 [ ] Access logging for sensitive reads where compliance requires it.
@@ -106,25 +106,25 @@ PHASE 4 — DATA PROTECTION & PRIVACY
     controls that satisfy it, or an explicit "N/A because…".
 
 ================================================================================
-PHASE 5 — DEPENDENCY & SUPPLY CHAIN
+PHASE 5 – DEPENDENCY & SUPPLY CHAIN
 ================================================================================
 [ ] Run the ecosystem auditor (npm audit --omit=dev, pip-audit, osv-scanner,
     cargo audit, govulncheck). Triage by: is it in the RUNTIME path, and is it
     REACHABLE with attacker input? A CVE in a dev/CLI-only dep is not a prod
-    risk — but move that dep to devDependencies so it stops polluting the
+    risk – but move that dep to devDependencies so it stops polluting the
     runtime tree and the prod audit.
 [ ] Lockfile committed and respected in CI (npm ci / pip install from lock).
 [ ] No unused / typo-squat-adjacent packages. Remove dead deps.
 [ ] Pin critical versions; have a patch cadence. Enable automated dep updates
     (Dependabot/Renovate) with CI gating.
 [ ] Verify there's no mixed import of a local util vs. a same-named package
-    (subtle behavior drift — a real bug, not just hygiene).
+    (subtle behavior drift – a real bug, not just hygiene).
 
 ================================================================================
-PHASE 6 — INPUT VALIDATION, RESOURCE LIMITS & ABUSE
+PHASE 6 – INPUT VALIDATION, RESOURCE LIMITS & ABUSE
 ================================================================================
 [ ] Schema-validate every request body (types, ranges, required fields,
-    MAX LENGTHS — unbounded text = cost/DoS).
+    MAX LENGTHS – unbounded text = cost/DoS).
 [ ] Rate limiting on public endpoints, and stricter limits on expensive ones
     (anything that spends money, dispatches jobs, or sends mail).
 [ ] Quotas/caps on resource-heavy actions enforced server-side (not just UI),
@@ -138,7 +138,7 @@ PHASE 6 — INPUT VALIDATION, RESOURCE LIMITS & ABUSE
     applicable, served with correct content-type and no execution.
 
 ================================================================================
-PHASE 7 — OUTBOUND REQUESTS & SSRF
+PHASE 7 – OUTBOUND REQUESTS & SSRF
 ================================================================================
 [ ] Any server-side fetch of a user-influenced URL (crawlers, webhooks,
     "import from URL", image optimizers): block private/loopback/link-local
@@ -152,7 +152,7 @@ PHASE 7 — OUTBOUND REQUESTS & SSRF
     self-hosters who run the same code next to internal services.
 
 ================================================================================
-PHASE 8 — CONFIG, HEADERS & TRANSPORT
+PHASE 8 – CONFIG, HEADERS & TRANSPORT
 ================================================================================
 [ ] CORS: explicit origin allowlist (never "*" with credentials). If the API
     is bearer-token based (not cookies), confirm credentials are off.
@@ -166,7 +166,7 @@ PHASE 8 — CONFIG, HEADERS & TRANSPORT
 [ ] TLS enforced; HTTP redirects to HTTPS.
 
 ================================================================================
-PHASE 9 — ERROR HANDLING & OBSERVABILITY
+PHASE 9 – ERROR HANDLING & OBSERVABILITY
 ================================================================================
 [ ] Errors return generic messages to clients; details go to logs only
     (don't tell an attacker which part of a forged token to fix).
@@ -175,10 +175,10 @@ PHASE 9 — ERROR HANDLING & OBSERVABILITY
 [ ] Health/readiness endpoints that reflect real dependencies (DB reachable).
 [ ] Metrics + alerts on the signals that matter: error rate, latency, auth
     failures, quota exhaustion, job failures.
-[ ] A crash in one item/request is isolated — one bad row never kills the run.
+[ ] A crash in one item/request is isolated – one bad row never kills the run.
 
 ================================================================================
-PHASE 10 — DATA LAYER & INTEGRITY
+PHASE 10 – DATA LAYER & INTEGRITY
 ================================================================================
 [ ] Migrations are idempotent and forward-only in prod; tested on a copy.
 [ ] Indexes exist for every query that filters/sorts at scale (check the plan).
@@ -188,10 +188,10 @@ PHASE 10 — DATA LAYER & INTEGRITY
     data warrants it.
 [ ] Connection pooling sized for the runtime (serverless vs. long-lived); no
     pool exhaustion under expected concurrency.
-[ ] Tests use a disposable/throwaway schema — never run DDL against prod data.
+[ ] Tests use a disposable/throwaway schema – never run DDL against prod data.
 
 ================================================================================
-PHASE 11 — TESTING & REGRESSION GATES
+PHASE 11 – TESTING & REGRESSION GATES
 ================================================================================
 [ ] Full suite green locally AND in CI; CI runs the DB-backed/integration
     tests that are skipped locally.
@@ -203,7 +203,7 @@ PHASE 11 — TESTING & REGRESSION GATES
 [ ] Manual exploratory pass on the critical user journeys.
 
 ================================================================================
-PHASE 12 — DEPLOYMENT, ROLLBACK & OPERATIONS
+PHASE 12 – DEPLOYMENT, ROLLBACK & OPERATIONS
 ================================================================================
 [ ] Reproducible builds; immutable artifacts; pinned runtime versions.
 [ ] Safe rollout: blue-green / canary / feature flags; a bad deploy affects a
@@ -215,7 +215,7 @@ PHASE 12 — DEPLOYMENT, ROLLBACK & OPERATIONS
 [ ] A runbook for the top failures; on-call knows where the dashboards are.
 
 ================================================================================
-PHASE 13 — OPEN-SOURCE / PUBLIC-RELEASE SPECIFICS
+PHASE 13 – OPEN-SOURCE / PUBLIC-RELEASE SPECIFICS
 ================================================================================
 [ ] LICENSE file present (code without one is not legally reusable).
 [ ] README: accurate setup from zero, every command/env var verified, honest
@@ -228,7 +228,7 @@ PHASE 13 — OPEN-SOURCE / PUBLIC-RELEASE SPECIFICS
     only notes that shouldn't be public.
 
 ================================================================================
-PHASE 14 — DIRECTION / PRODUCT SANITY
+PHASE 14 – DIRECTION / PRODUCT SANITY
 ================================================================================
 [ ] Does the code actually implement the stated product and its guarantees
     (e.g. "nothing sends without approval" is enforced in code, not just copy)?
@@ -239,14 +239,14 @@ PHASE 14 — DIRECTION / PRODUCT SANITY
 ================================================================================
 SEVERITY RUBRIC (for writing up findings)
 ================================================================================
-CRITICAL — auth bypass, IDOR exposing other tenants, RCE, secret leak,
+CRITICAL – auth bypass, IDOR exposing other tenants, RCE, secret leak,
            data loss. Block the release.
-HIGH     — privilege escalation, injection with real reach, missing authz on a
+HIGH     – privilege escalation, injection with real reach, missing authz on a
            sensitive route, exploitable dependency in the runtime path.
-MEDIUM   — limit/quota races, missing rate limiting, SSRF reachable only in
+MEDIUM   – limit/quota races, missing rate limiting, SSRF reachable only in
            some deployments, weak validation with cost impact.
-LOW      — defense-in-depth gaps, non-reachable CVEs, minor info disclosure.
-INFO     — hygiene, cosmetics, by-design tradeoffs worth noting.
+LOW      – defense-in-depth gaps, non-reachable CVEs, minor info disclosure.
+INFO     – hygiene, cosmetics, by-design tradeoffs worth noting.
 
 For each finding record: WHERE (file:line), WHAT (the defect), the FAILURE
 SCENARIO (concrete inputs -> wrong outcome), SEVERITY, and the FIX. If you

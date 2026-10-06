@@ -2,8 +2,8 @@
 
 A 200 response is not evidence. Domains get parked, sold, redirected to a marketplace
 listing, or left as an "under construction" placeholder, and every one of those looks
-reachable. Scraping them produces a confident, wrong lead — the exact failure the
-quality-over-quantity rule exists to prevent — so each is detected and the lead is
+reachable. Scraping them produces a confident, wrong lead – the exact failure the
+quality-over-quantity rule exists to prevent – so each is detected and the lead is
 demoted rather than shipped."""
 
 from __future__ import annotations

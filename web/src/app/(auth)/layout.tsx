@@ -30,7 +30,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </Link>
 
         <p className="relative z-10 text-sm text-white/60">
-          Free to start &mdash; no credit card required.
+          Free &ndash; no credit card required.
         </p>
       </aside>
 

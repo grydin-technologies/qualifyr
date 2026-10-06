@@ -1,7 +1,7 @@
 [project]
 name = "gtm-engine"
-version = "0.1.0"
-description = "Qualifyr: offer-driven market-research and lead-discovery engine — describe what you sell, find companies that need it (Pakistan-first)."
+version = "1.0.0"
+description = "Qualifyr: offer-driven market-research and lead-discovery engine – describe what you sell, find companies that need it (Pakistan-first)."
 requires-python = ">=3.12"
 dependencies = [
     "httpx>=0.28",
