@@ -1,4 +1,4 @@
-/** The Qualifyr logo mark: a target reticle fused with a magnifier — "find and lock onto
+/** The Qualifyr logo mark: a target reticle fused with a magnifier – "find and lock onto
  *  the real buyers". Drawn with currentColor so it inherits whatever text colour it sits in
  *  (brand-foreground inside the brand square, foreground on its own), and stays crisp at any
  *  size instead of the raster a generator would give. */

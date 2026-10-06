@@ -1,6 +1,6 @@
 """PPRA e-procurement (epms.ppra.gov.pk): every active public tender in Pakistan with the
 procuring organisation, requirement text and closing date. A tender is the strongest
-intent signal there is — a stated requirement, with a deadline, from a confirmed buyer.
+intent signal there is – a stated requirement, with a deadline, from a confirmed buyer.
 
 Used two ways:
   * as a DiscoverySource: organisations tendering for what the campaign sells become leads

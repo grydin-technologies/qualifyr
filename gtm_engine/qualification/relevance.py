@@ -1,7 +1,7 @@
 """Strict text-relevance matching.
 
 The P2 rule: a hiring or intent signal only counts if it is relevant to *what this campaign
-sells*. "A company is hiring" is not a buying signal on its own — a retailer hiring a
+sells*. "A company is hiring" is not a buying signal on its own – a retailer hiring a
 cashier tells us nothing about whether it wants inventory software. So a signal must contain
 at least one of the campaign's relevance keywords, matched on whole words (no substring
 false positives like 'art' inside 'cart')."""

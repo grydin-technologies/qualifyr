@@ -157,7 +157,7 @@ function NewCampaign({ open, onClose, onCreated }: { open: boolean; onClose: () 
               />
               {!hasBrave && !result && (
                 <div className="rounded-lg border border-dashed p-3 grid gap-2">
-                  <p className="text-xs font-medium text-muted-foreground">No Brave API key — provide search hints to improve discovery:</p>
+                  <p className="text-xs font-medium text-muted-foreground">No Brave API key – provide search hints to improve discovery:</p>
                   <Input
                     value={categories}
                     onChange={(e) => setCategories(e.target.value)}
@@ -185,7 +185,7 @@ function NewCampaign({ open, onClose, onCreated }: { open: boolean; onClose: () 
           ) : (
             <>
               <div className="rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950/30 p-3">
-                <p className="text-xs text-blue-700 dark:text-blue-300">Add a <strong>Groq API key</strong> in Settings → API Keys to unlock automatic mode — describe what you want in plain English and the engine handles the rest.</p>
+                <p className="text-xs text-blue-700 dark:text-blue-300">Add a <strong>Groq API key</strong> in Settings → API Keys to unlock automatic mode – describe what you want in plain English and the engine handles the rest.</p>
               </div>
               <div className="grid gap-3">
                 <div className="grid gap-1.5">
@@ -500,7 +500,7 @@ function RunPanel({ campaign, onFinished }: { campaign: Campaign; onFinished: ()
   const noKeys = keyCount === 0
 
   // Adopt the server's live status whenever the campaign list refreshes (e.g. after returning
-  // to the page) — unless a local poll is already tracking an active run, so finer-grained
+  // to the page) – unless a local poll is already tracking an active run, so finer-grained
   // local progress is never clobbered by a slightly older list snapshot. This is what stops a
   // dispatched/running campaign from rendering as "nothing ran" after navigation.
   React.useEffect(() => {
@@ -695,7 +695,7 @@ export default function CampaignsPage() {
                 </div>
               </div>
 
-              {/* Last run — compact meta with a status dot */}
+              {/* Last run – compact meta with a status dot */}
               <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
                 <span className={cn("size-1.5 rounded-full", statusDotClass(c.last_run?.status))} />
                 {c.last_run

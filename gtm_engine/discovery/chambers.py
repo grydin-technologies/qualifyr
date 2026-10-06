@@ -1,7 +1,7 @@
 """Chamber-of-commerce member directories as discovery sources (Pakistan).
 
 KCCI (Karachi) publishes its full active-member list on one public page with the member
-company and its registered representative — usually the owner or a director, i.e. the
+company and its registered representative – usually the owner or a director, i.e. the
 decision-maker we want. The page is ~3 MB and changes rarely, so it is cached on disk.
 
 LCCI (Lahore) and ICCI (Islamabad) do not expose a scrapeable list without a session; they

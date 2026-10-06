@@ -170,7 +170,7 @@ def audit_online_presence(
 
     notes: list[str] = []
     if not snapshot.reachable:
-        notes.append("website unreachable — online presence could not be fully audited")
+        notes.append("website unreachable – online presence could not be fully audited")
     if has_ecommerce and not has_cart:
         notes.append("e-commerce platform detected but no cart/checkout flow found")
     if delivery_model == "none" and not has_whatsapp:
@@ -196,7 +196,7 @@ def audit_online_presence(
 
 
 def online_gap_labels(op: OnlinePresence) -> list[str]:
-    """Named gaps for the pitch-angle generator — what's missing from this business's digital setup."""
+    """Named gaps for the pitch-angle generator – what's missing from this business's digital setup."""
     gaps: list[str] = []
     if not op.has_ecommerce_site:
         gaps.append("no_ecommerce")

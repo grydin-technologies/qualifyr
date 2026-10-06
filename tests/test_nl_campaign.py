@@ -554,7 +554,7 @@ async def test_area_proximity_filter_drops_distant_companies():
     companies = [
         DiscoveredCompany(name="Near Clinic", source="osm", extra={"lat": 33.633, "lon": 73.023}),  # ~0.1km
         DiscoveredCompany(name="Far Hospital", source="osm", extra={"lat": 33.52, "lon": 73.10}),   # ~15km
-        DiscoveredCompany(name="No Coords", source="osm"),  # no lat/lon — should pass
+        DiscoveredCompany(name="No Coords", source="osm"),  # no lat/lon – should pass
     ]
 
     with patch("gtm_engine.discovery.geocode.Geocoder") as MockGeocoder:
@@ -628,7 +628,7 @@ async def test_area_proximity_filter_drops_wrong_sector_even_when_near():
 
 def test_geofence_adapts_to_area_size():
     """The geofence is derived from each area's geocoded extent at run time: a point/dense
-    block stays tight (floored, never city-wide); a wide neighbourhood scales up — no per-city
+    block stays tight (floored, never city-wide); a wide neighbourhood scales up – no per-city
     radius tuning."""
     from gtm_engine.pipeline import _fence_from_bbox
     from gtm_engine.discovery.geocode import BBox
@@ -672,7 +672,7 @@ async def test_area_filter_fails_open_when_it_would_drop_everything():
     from gtm_engine.discovery.geocode import BBox
 
     g13 = BBox(south=33.625, west=73.015, north=33.640, east=73.030)
-    companies = [  # both far from G-13 (Karachi, Lahore) — would all be dropped without the guard
+    companies = [  # both far from G-13 (Karachi, Lahore) – would all be dropped without the guard
         DiscoveredCompany(name="Far A", source="osm", extra={"lat": 24.86, "lon": 67.0}),
         DiscoveredCompany(name="Far B", source="overture", extra={"lat": 31.52, "lon": 74.35}),
     ]
@@ -748,7 +748,7 @@ async def test_check_discovery_relevance_judges_beyond_first_batch():
     llm = AllFalseLLM()
     companies = [{"name": f"Pharmacy {i}", "category": "overture=pharmacy"} for i in range(25)]
     result = await check_discovery_relevance(llm, "doctors", companies)
-    assert result == [False] * 25      # none leak through — all 25 judged, not just the first 20
+    assert result == [False] * 25      # none leak through – all 25 judged, not just the first 20
     assert llm.calls == 2              # 20 + 5, chunked
 
 

@@ -332,7 +332,7 @@ def campaigns(user_id: str | None = Depends(current_user_id)) -> list[dict]:
 
 
 # Bounds on user-supplied campaign input: unbounded text/lists are a cost and DoS vector
-# (stored, crawled, and fed to the LLM). These are generous — far above any real campaign — so
+# (stored, crawled, and fed to the LLM). These are generous – far above any real campaign – so
 # they never bite a legitimate user, only a payload meant to abuse.
 class CampaignCreate(BaseModel):
     name: str = Field(min_length=1, max_length=200)
@@ -400,7 +400,7 @@ class CampaignNLRequest(BaseModel):
     text: str = Field(min_length=1, max_length=2000)
     max_companies: int | None = Field(default=None, ge=1, le=1000)
     # Optional discovery hints from the NL form (shown when there is no Brave key). When given,
-    # they pin discovery to exactly what the user asked for — the pipeline treats user-set map
+    # they pin discovery to exactly what the user asked for – the pipeline treats user-set map
     # categories as authoritative and never broadens past them (e.g. no pharmacies in a doctors
     # search). Bounded like every other user-supplied list.
     osm_categories: list[str] = Field(default=[], max_length=200)
@@ -503,7 +503,7 @@ def run_campaign(campaign_id: str, req: RunRequest,
     # accounts are unlimited; everyone else is backstopped against spamming workflow dispatches.
     if user_id is not None and not _is_unlimited(email) and not check_usage(db, user_id, "runs"):
         db.close()
-        raise HTTPException(429, "Daily run limit reached — try again tomorrow.")
+        raise HTTPException(429, "Daily run limit reached – try again tomorrow.")
     db.close()
     # A file-based campaign is dispatched by its repo path; a user-created (DB) one by its
     # id, which the runner resolves from Postgres. Either way the runner's `gtm run` accepts it.
@@ -1049,8 +1049,8 @@ def save_api_key(key_name: str, body: ApiKeyBody, user_id: str | None = Depends(
         raise HTTPException(401, "sign in to manage API keys")
     if key_name not in ALLOWED_KEYS:
         raise HTTPException(422, f"unknown key: {key_name}; allowed: {', '.join(sorted(ALLOWED_KEYS))}")
-    if not encryption_available():
-        raise HTTPException(503, "GTM_ENCRYPTION_KEY not configured — cannot store API keys")
+        if not encryption_available():
+        raise HTTPException(503, "GTM_ENCRYPTION_KEY not configured – cannot store API keys")
     try:
         encrypted = encrypt_key(body.value.strip())
     except Exception as exc:
@@ -1210,7 +1210,7 @@ def save_user_mailbox(body: MailboxBody, user_id: str | None = Depends(current_u
     if not user_id:
         raise HTTPException(401, "sign in to manage mailboxes")
     if not encryption_available():
-        raise HTTPException(503, "GTM_ENCRYPTION_KEY not configured — cannot store mailbox credentials")
+        raise HTTPException(503, "GTM_ENCRYPTION_KEY not configured – cannot store mailbox credentials")
     addr = body.address.strip().lower()
     if "@" not in addr:
         raise HTTPException(422, "invalid email address")
@@ -1266,6 +1266,6 @@ def test_user_mailbox(body: MailboxBody) -> dict:
         conn.quit()
         return {"ok": True, "message": f"Connected to {body.smtp_host}:{body.smtp_port} as {addr}"}
     except smtplib.SMTPAuthenticationError:
-        return {"ok": False, "message": "Authentication failed — check email and app password"}
+        return {"ok": False, "message": "Authentication failed – check email and app password"}
     except (smtplib.SMTPException, OSError) as exc:
         return {"ok": False, "message": f"Connection failed: {exc}"}

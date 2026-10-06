@@ -1,12 +1,12 @@
 """Per-company research brief (P5).
 
-A research engine's deliverable is not a row in a table — it is a short, factual account of
+A research engine's deliverable is not a row in a table – it is a short, factual account of
 *why this company, and who to talk to*, that a human can read and act on. This assembles one
 from what the pipeline already found: what the company is, the intent/buying signals that
 survived the relevance gate, the decision-maker, and the qualification verdict.
 
 Deterministic and grounded: every sentence is built from observed fields, nothing invented.
-The LLM is never needed here — the point is a trustworthy summary, not prose."""
+The LLM is never needed here – the point is a trustworthy summary, not prose."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ def _sentence(parts: list[str]) -> str:
 
 
 def _web_presence(quality: CompanyQuality | None) -> str | None:
-    """The Section-6 website activity/quality point, stated plainly — including the 'reachable
+    """The Section-6 website activity/quality point, stated plainly – including the 'reachable
     but almost nothing public' case (e.g. a single-page site with no about/contact/email), which
     is itself a strong outreach signal and must not be hidden."""
     if quality is None:
@@ -81,7 +81,7 @@ def _online_presence_section(op: OnlinePresence | None) -> str | None:
     if op.delivery_model and op.delivery_model != "unknown":
         line += f" Delivery model: {op.delivery_model}."
     if op.online_gap_score >= 18:
-        line += " Strong candidate — significant digital gap."
+        line += " Strong candidate – significant digital gap."
     elif op.online_gap_score >= 10:
         line += " Some digital presence but room to grow."
     return line
@@ -94,14 +94,14 @@ def build_research_brief(company: DiscoveredCompany, cls: Classification, contac
                          online_presence: OnlinePresence | None = None) -> str:
     """A grounded per-company account covering the Section-6 research checklist: what the company
     is, its web presence, whether it plausibly needs the offer (intent), the buying signals, the
-    technologies, and who to talk to — every line built from observed fields, nothing invented."""
+    technologies, and who to talk to – every line built from observed fields, nothing invented."""
     lines: list[str] = []
 
     where = ", ".join(x for x in (city or company.city, company.country) if x)
     what = industry or company.category
     head = _sentence([
         f"{company.name}",
-        f"— {what}" if what else "",
+        f"– {what}" if what else "",
         f"in {where}" if where else "",
         f". {description.strip().rstrip('.')}." if description else ".",
     ])
@@ -115,17 +115,17 @@ def build_research_brief(company: DiscoveredCompany, cls: Classification, contac
     if op_line:
         lines.append(op_line)
 
-    # Whether it plausibly needs the offer — the intent verdict leads when the LLM judged it.
+    # Whether it plausibly needs the offer – the intent verdict leads when the LLM judged it.
     if cls.intent_buyer is not None:
         verdict = "likely a buyer" if cls.intent_buyer else "no evident need for the offer"
         lines.append(f"Intent: {verdict} ({cls.intent_confidence:.0%})"
-                     + (f" — {cls.intent_reason}" if cls.intent_reason else "") + ".")
+                     + (f" – {cls.intent_reason}" if cls.intent_reason else "") + ".")
 
     # Why it is (or is not yet) a buyer.
     if cls.company_type.value == "BUYER" and cls.reasons:
         lines.append("Buyer: " + cls.reasons[0] + ".")
 
-    # Relevant intent/buying signals — the reason to reach out now.
+    # Relevant intent/buying signals – the reason to reach out now.
     reasons: list[str] = []
     for s in (signals.intent or [])[:2]:
         rel = ", ".join(s.get("relevance", [])) if s.get("relevance") else ""

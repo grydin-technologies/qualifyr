@@ -10,7 +10,7 @@ export function FinalCta() {
   return (
     <section className="px-4 py-20 sm:px-6">
       <div className="relative mx-auto max-w-4xl overflow-hidden rounded-[1.75rem] border border-border/60 bg-card px-6 py-16 text-center shadow-2xl shadow-black/20 sm:py-20">
-        {/* dotted grid, faded toward the edges — subtle monochrome texture, no colour */}
+        {/* dotted grid, faded toward the edges – subtle monochrome texture, no colour */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-[0.35] [mask-image:radial-gradient(70%_70%_at_50%_40%,black,transparent)]"
@@ -33,7 +33,7 @@ export function FinalCta() {
           Stop guessing who to reach out to
         </h2>
         <p className="relative mx-auto mt-4 max-w-lg text-pretty text-muted-foreground">
-          Describe what you sell. Qualifyr finds the companies that actually need it — and
+          Describe what you sell. Qualifyr finds the companies that actually need it – and
           explains every match.
         </p>
 

@@ -155,9 +155,9 @@ def _discovery_relevance_filter(
     """Drop map-sourced companies whose name/category/address contain none of the offer keywords.
 
     Web-search results pass automatically (the query already targeted them).  Companies whose
-    discovery category matches one the campaign explicitly requested also pass — but only when
+    discovery category matches one the campaign explicitly requested also pass – but only when
     those categories were explicitly user-configured, not derived from a fallback sector.
-    When no keywords are available (generic campaign), everything passes — the filter is a no-op.
+    When no keywords are available (generic campaign), everything passes – the filter is a no-op.
     Returns (kept, dropped_count).
     """
     terms = [t.strip().lower() for t in offer_keywords if t and t.strip()]
@@ -198,14 +198,14 @@ def _relevance_target_desc(target_industries: list[str], sectors: list[str]) -> 
     terms: list[str] = []
     for s in sectors or []:
         if s in ("_niche", "general_retail"):
-            continue  # too broad to discriminate on — no useful target type
+            continue  # too broad to discriminate on – no useful target type
         match = (taxonomy.get(s) or {}).get("match", [])
         if match:
             terms.append(match[0])
     return ", ".join(terms[:3]) or None
 
 
-# The area's tolerance is NOT a fixed radius — it is derived at run time from the geocoder's
+# The area's tolerance is NOT a fixed radius – it is derived at run time from the geocoder's
 # bounding box for each requested area, so a dense Lahore block stays tight and a wide Islamabad
 # sector stays wide without any per-city tuning. These bounds only clamp pathological geocodes:
 # a point-geocode that would be impossibly tight, and a vague match that would be city-wide.
@@ -264,9 +264,9 @@ async def _area_proximity_filter(
     Precedence, per company:
     1. Sector-code match (when the requested area is a sector like 'G-11'): if the company's
        name/address names a sector, keep it only when that sector is one of the requested ones.
-       Exact — drops 'F-11 Markaz'/'G-12' even if their coordinates sit next to G-11.
+       Exact – drops 'F-11 Markaz'/'G-12' even if their coordinates sit next to G-11.
     2. Geofence containment: companies with lat/lon are kept only inside a requested area's
-       geofence — a box sized from that area's own geocoded bounding box (tight for a packed
+       geofence – a box sized from that area's own geocoded bounding box (tight for a packed
        Lahore block, wide for a large sector), so no fixed radius has to be hand-tuned per city.
     3. Geocode fallback: coordinate-less companies are geocoded (name+address+city) and tested
        the same way; only a total geocode failure passes through.
@@ -353,7 +353,7 @@ async def _area_proximity_filter(
     # genuine "nothing here". Returning an empty run hides that completely. Keep the results
     # unfiltered and log loudly instead, so a geo glitch never silently zeroes a run.
     if companies and not kept:
-        log.warning("area filter would drop ALL %d companies for areas=%s sectors=%s — treating "
+        log.warning("area filter would drop ALL %d companies for areas=%s sectors=%s – treating "
                     "as a parse/geocode miss and keeping them unfiltered rather than returning an "
                     "empty run", len(companies), ", ".join(areas), ",".join(sorted(requested_sectors)) or "none")
         return companies, 0
@@ -412,7 +412,7 @@ def apply_intent_verdict(cls: Classification, verdict: dict, *, threshold: float
     note. A confident buyer promotes a keyword-thin UNKNOWN to BUYER; a confident non-buyer
     demotes a keyword-only BUYER to UNKNOWN. The verdict is always recorded on the
     classification even when it is not strong enough to flip the type. The caller must not pass
-    a VENDOR here — that is a hard reject and is never changed by intent."""
+    a VENDOR here – that is a hard reject and is never changed by intent."""
     cls.intent_buyer = verdict["buyer"]
     cls.intent_confidence = verdict["confidence"]
     cls.intent_reason = verdict["reason"]
@@ -421,10 +421,10 @@ def apply_intent_verdict(cls: Classification, verdict: dict, *, threshold: float
     if verdict["buyer"] and strong and cls.company_type == CompanyType.UNKNOWN:
         cls.company_type = CompanyType.BUYER
         cls.confidence = max(cls.confidence, verdict["confidence"])
-        cls.reasons.append(f"intent: needs the offer ({pct}) — {verdict['reason']}")
+        cls.reasons.append(f"intent: needs the offer ({pct}) – {verdict['reason']}")
     elif not verdict["buyer"] and strong and cls.company_type == CompanyType.BUYER:
         cls.company_type = CompanyType.UNKNOWN
-        cls.reasons.append(f"intent: no evident need for the offer ({pct}) — {verdict['reason']}")
+        cls.reasons.append(f"intent: no evident need for the offer ({pct}) – {verdict['reason']}")
     return f"{verdict['by']}: {'buyer' if verdict['buyer'] else 'not a buyer'} ({pct})"
 
 
@@ -615,7 +615,7 @@ class Pipeline:
                 online_presence.opening_hours_raw = parsed.raw
                 online_presence.opening_hours_days = parsed.days_open
 
-        # Google Places enrichment (rating, review count, hours, reviews) — budget-limited
+        # Google Places enrichment (rating, review count, hours, reviews) – budget-limited
         places_key = self._resolved_keys.get("places") or self.settings.google_places_api_key
         if (self.settings.enable_places_enrichment
                 and places_key
@@ -809,7 +809,7 @@ class Pipeline:
             buying_signals=list(signals.buying.keys()) if signals.buying else [],
         )
         # Clean, human-shareable fields: a Latin-script name, a single-line address, and a
-        # description that is real prose (meta or the grounded brief) — never a nav-menu scrape.
+        # description that is real prose (meta or the grounded brief) – never a nav-menu scrape.
         display_name = prefer_latin_name(company.name, bundle.title)
         clean_addr = clean_address(company.address)
         clean_meta = clean_description(bundle.description, None)

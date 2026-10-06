@@ -1,6 +1,6 @@
 # Installed by Vercel's Python builder for web/api/index.py. Mirrors pyproject.toml's
 # core + api + sheets dependencies (skips overture/browser extras: unused by the fast
-# endpoints that run here — long jobs run in GitHub Actions instead).
+# endpoints that run here – long jobs run in GitHub Actions instead).
 httpx>=0.28
 beautifulsoup4>=4.12
 lxml>=5

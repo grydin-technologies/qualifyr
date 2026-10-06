@@ -44,7 +44,7 @@ def role_rank(role: str, campaign: CampaignConfig, defaults: DefaultRules) -> in
 
 def _match_personal_profile(name: str, profiles: list[str]) -> str | None:
     """A decision-maker's own LinkedIn, matched by name. Requires BOTH the first and last
-    name in the /in/ slug so we never attach a stranger's profile — a missed match just
+    name in the /in/ slug so we never attach a stranger's profile – a missed match just
     falls back to the company page, which is the safe failure."""
     parts = [p for p in name.lower().replace(".", " ").split() if p.isalpha()]
     if len(parts) < 2:

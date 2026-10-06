@@ -1,9 +1,9 @@
-# Qualifyr — image-generation prompts
+# Qualifyr – image-generation prompts
 
 Prompts for producing the visual assets the landing page still uses placeholders for.
 Copy a prompt into your image generator of choice (ChatGPT/DALL·E, Midjourney, Ideogram).
 
-**Brand constraints — apply to every prompt:**
+**Brand constraints – apply to every prompt:**
 - **Strictly black and white / greyscale. No colour, no gradients of hue.** The Qualifyr
   accent is monochrome (`--brand` is pure black in light mode, pure white in dark). Any
   colour will clash with the site.
@@ -13,7 +13,7 @@ Copy a prompt into your image generator of choice (ChatGPT/DALL·E, Midjourney, 
 - Where it says *transparent background*, ask for PNG with transparency (or export SVG).
 
 > Note on SVG: image generators output raster (PNG), not true SVG. For the **logo mark and
-> favicon** I'd rather hand-code the SVG directly — it's geometric and monochrome, so I can
+> favicon** I'd rather hand-code the SVG directly – it's geometric and monochrome, so I can
 > make it pixel-crisp and themeable instead of generating a fuzzy raster. Say the word and
 > I'll do that in code. The prompts below are for the illustration-style assets where a
 > generator genuinely helps (OG image, auth/FAQ art, hero backdrop).
@@ -24,14 +24,14 @@ Copy a prompt into your image generator of choice (ChatGPT/DALL·E, Midjourney, 
 
 > A minimalist black-and-white app icon for a B2B software product called "Qualifyr", a lead
 > qualification engine. Abstract geometric mark suggesting a funnel filtering many dots down
-> to a few highlighted ones — the idea of separating real buyers from noise. Single-weight
+> to a few highlighted ones – the idea of separating real buyers from noise. Single-weight
 > line work or a solid silhouette, centered, on a transparent background. Flat vector, no
 > colour, no gradient, no shadow. Bold enough to read clearly at 32×32 px. Square.
 
 Variations to try: swap "funnel filtering dots" for "a target reticle with one dot locked
 in", or "a checkmark formed out of a downward filter". Pick whichever reads at favicon size.
 
-## 2. Wordmark (optional — text logo)
+## 2. Wordmark (optional – text logo)
 
 > The word "Qualifyr" as a clean, modern wordmark in a geometric sans-serif, solid black on
 > transparent background (and a white-on-transparent variant). Tight, confident letter
@@ -63,7 +63,7 @@ in", or "a checkmark formed out of a downward filter". Pick whichever reads at f
 
 > A very subtle, dark, seamless background texture for a website hero on a near-black page.
 > Faint dark-grey dotted grid or fine topographic contour lines, extremely low contrast, no
-> focal point — it must sit quietly behind white headline text without competing. Pure
+> focal point – it must sit quietly behind white headline text without competing. Pure
 > greyscale, no colour, no bright areas. Wide 16:9.
 
 ---

@@ -51,7 +51,7 @@ const panels = [
     frame: (
       <div className="flex flex-col gap-2 px-2">
         <div className="rounded-lg bg-muted px-2.5 py-2 text-[9px] leading-relaxed text-muted-foreground">
-          Hi Sana, saw Ittefaq just opened a second Lahore branch — congrats…
+          Hi Sana, saw Ittefaq just opened a second Lahore branch – congrats…
         </div>
         <button className="flex items-center justify-center rounded-lg bg-brand px-2.5 py-2 text-[9px] font-medium text-brand-foreground">
           Approve &amp; send
@@ -105,7 +105,7 @@ export function DeviceMockups() {
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">See it in action</h2>
         <p className="mt-4 text-muted-foreground">
-          The same responsive dashboard on your desk or in your pocket &mdash; there is no
+          The same responsive dashboard on your desk or in your pocket &ndash; there is no
           separate mobile app.
         </p>
       </div>

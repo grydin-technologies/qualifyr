@@ -1,4 +1,4 @@
-QUALIFYR — ROADMAP (all phases, in order)
+QUALIFYR – ROADMAP (all phases, in order)
 =========================================
 Everything free, local-first, deterministic. Each phase is independently
 shippable and ends with tests + a live check.
@@ -8,7 +8,7 @@ A and B first because they change outcomes for the emails already going out;
 C only once a second mailbox exists; D and E as volume grows.
 
 
-PHASE A — PROTECT THE SENDER  (~1/2 day)  [DONE 2026-09-21]
+PHASE A – PROTECT THE SENDER  (~1/2 day)  [DONE 2026-09-21]
 ----------------------------------------
 The Gmail account is the single point of failure; one burn stops everything.
 
@@ -22,7 +22,7 @@ The Gmail account is the single point of failure; one burn stops everything.
   threshold in a day.
 
 
-PHASE B — BETTER CONTACTS  (~1 day)  [DONE 2026-09-21; decision-maker email discovery pulled in from G]
+PHASE B – BETTER CONTACTS  (~1 day)  [DONE 2026-09-21; decision-maker email discovery pulled in from G]
 -----------------------------------
 Moves reply rate more than any copy change.
 
@@ -38,7 +38,7 @@ Moves reply rate more than any copy change.
   recording which source gave each field (shown in the lead detail).
 
 
-PHASE C — VOLUME WITHOUT SPAM  (~1/2 day)  [DONE 2026-09-21]
+PHASE C – VOLUME WITHOUT SPAM  (~1/2 day)  [DONE 2026-09-21]
 -----------------------------------------
 * Configure extra mailboxes as GTM_MAILBOX_N_USER/_PASSWORD (or OAuth trio), optional
   _LIMIT and _NAME; legacy GTM_SMTP_* is mailbox #1. `gtm outreach mailboxes <campaign>`
@@ -49,7 +49,7 @@ PHASE C — VOLUME WITHOUT SPAM  (~1/2 day)  [DONE 2026-09-21]
 * Ledger and reply sync become per-mailbox.
 
 
-PHASE D — SIGNALS & SOURCES  (1–2 days)  [DONE 2026-09-21]
+PHASE D – SIGNALS & SOURCES  (1–2 days)  [DONE 2026-09-21]
 ---------------------------------------
 * Built: KCCI member directory (29.9k companies with representative names) as a
   DiscoverySource; RDAP domain age (.com/.net…; no RDAP exists for .pk); GDELT news
@@ -65,11 +65,11 @@ PHASE D — SIGNALS & SOURCES  (1–2 days)  [DONE 2026-09-21]
 * News/RSS mention check (Google News RSS, free) as a buying signal and
   personalisation hook.
 * SECP company search + chamber directories (ICCI / LCCI / KCCI) as new
-  DiscoverySource adapters — buyer-heavy Pakistani lists with legal names and
+  DiscoverySource adapters – buyer-heavy Pakistani lists with legal names and
   incorporation dates; Scrapy or httpx spiders per site.
 
 
-PHASE E — REPLY INTELLIGENCE  (~1/2 day)  [DONE 2026-09-21]
+PHASE E – REPLY INTELLIGENCE  (~1/2 day)  [DONE 2026-09-21]
 ----------------------------------------
 * Built: outreach/reply_classifier.py (rule-based, quoted history stripped, referral
   address/name extraction, return-date parsing). Actions: interested/reply stop; not
@@ -83,7 +83,7 @@ PHASE E — REPLY INTELLIGENCE  (~1/2 day)  [DONE 2026-09-21]
 * Tags visible in Outreach -> Activity and on the lead.
 
 
-PHASE F — SHARING & POLISH  (~1/2 day)  [DONE 2026-09-21]
+PHASE F – SHARING & POLISH  (~1/2 day)  [DONE 2026-09-21]
 --------------------------------------
 * Built: export/sheets.py (service account, GTM_SHEETS_* secrets, `gtm sheets`, UI button,
   auto-mirror in the gather workflow when configured); landing page site/index.html on
@@ -103,7 +103,7 @@ ONGOING / GATED ON YOU
   everything sent so far is against the sample retail campaign).
 * Supabase migration when you want the UI hosted rather than local.
 * Browser fallback switch-on (enable_browser_fallback in config/engine.yaml)
-  if a campaign shows many JS-only sites — already built.
+  if a campaign shows many JS-only sites – already built.
 
 
 DELIBERATELY NOT PLANNED
@@ -119,7 +119,7 @@ Engine M1–M9 done, web UI done, human approval required for every email.
 Say "start A" (or whichever phase) to begin.
 
 
-PHASE G — CEO ASKS (after A–F; see docs/DIRECTION.md)  [DONE 2026-09-21]
+PHASE G – CEO ASKS (after A–F; see docs/DIRECTION.md)  [DONE 2026-09-21]
 -----------------------------------------------------
 * Built: intent/ppra.py (PPRA e-procurement, keyword-filtered + paginated, open tenders
   only, org-name cleaning, tender = buyer evidence), intent/company_pages.py (RFQ phrases
@@ -129,7 +129,7 @@ PHASE G — CEO ASKS (after A–F; see docs/DIRECTION.md)  [DONE 2026-09-21]
   (correct / wrong company / wrong person / wrong email) with accuracy on the dashboard.
 * Intent & requirement scraping: tenders/RFQs (PPRA, company procurement pages),
   job posts implying a purchase, "looking for supplier/vendor" posts, expansion
-  announcements — each with source URL + date, feeding scoring and hooks.
+  announcements – each with source URL + date, feeding scoring and hooks.
 * LLM layer (optional, free/local: Ollama; hosted free tier as fallback):
   requirement extraction from unstructured text, reply classification, hook
   drafting from observed facts only. Deterministic path remains default and

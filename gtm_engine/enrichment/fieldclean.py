@@ -1,6 +1,6 @@
 """Deterministic field cleaning for human-shareable output.
 
-Discovery and scraping produce raw, machine-shaped values — meta descriptions mixed
+Discovery and scraping produce raw, machine-shaped values – meta descriptions mixed
 with nav-menu scrapes, URL-encoded e-mail fragments, multi-line concatenated addresses,
 non-Latin company names, and `key: value` signal tags. These functions turn those into
 clean, readable cells so an exported sheet is usable by a non-technical reader. Everything
@@ -38,7 +38,7 @@ def clean_email(email: str | None) -> str | None:
       - a phone number fused to the local part ("03009502334info@x.com" -> "info@x.com")
       - surrounding punctuation / whitespace
     Returns a lowercased address, or None if nothing salvageable remains.
-    Validation (syntax + MX) still happens downstream — this only normalises the string.
+    Validation (syntax + MX) still happens downstream – this only normalises the string.
     """
     if not email:
         return None
@@ -100,7 +100,7 @@ def _first_sentences(text: str, limit: int) -> str:
 def clean_description(meta: str | None, research_brief: str | None = None) -> str | None:
     """A clean one-liner about the company. Prefers the page meta description when it reads
     like real prose; otherwise falls back to the grounded research brief. Never returns a
-    nav-menu scrape — better an empty cell than junk."""
+    nav-menu scrape – better an empty cell than junk."""
     m = re.sub(r"\s+", " ", meta).strip() if meta else ""
     if len(m) >= 40 and not looks_like_boilerplate(m):
         return _first_sentences(m, 280)
@@ -123,8 +123,8 @@ def _latin_ratio(s: str) -> float:
 
 
 def _clean_title(title: str) -> str:
-    # Site titles tack on " - Home", " | Welcome", taglines — keep the first segment.
-    seg = re.split(r"\s[|\-–—:]\s", title.strip())[0].strip()
+    # Site titles tack on " - Home", " | Welcome", taglines – keep the first segment.
+    seg = re.split(r"\s[|\-––:]\s", title.strip())[0].strip()
     seg = re.sub(r"\b(home|welcome|official website|homepage)\b", "", seg, flags=re.I).strip()
     return seg or title.strip()
 

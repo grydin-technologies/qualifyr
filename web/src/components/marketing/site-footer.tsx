@@ -21,7 +21,7 @@ const columns = [
   },
 ]
 
-const SUPPORT_EMAIL = "outreach.grydin@gmail.com"
+const SUPPORT_EMAIL = "hello@grydin.co";
 
 export function SiteFooter() {
   return (
@@ -42,15 +42,15 @@ export function SiteFooter() {
             Qualifyr
           </Link>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            Describe what you sell and Qualifyr finds the companies that actually need it —
-            from free public sources, with the reasoning behind every match.
+            Describe what you sell and Qualifyr finds the companies that actually need it –
+            from various sources, with the reasoning behind every match.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
             <span className="inline-flex items-center rounded-full border border-border/70 bg-background/50 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
               Pakistan-focused
             </span>
             <span className="inline-flex items-center rounded-full border border-border/70 bg-background/50 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
-              Public data only
+              Qualified leads only
             </span>
           </div>
         </div>
@@ -95,7 +95,7 @@ export function SiteFooter() {
       <div className="relative border-t">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:px-6">
           <span>© {new Date().getFullYear()} Qualifyr. All rights reserved.</span>
-          <span className="text-xs">Built on free, public data sources.</span>
+          {/* <span className="text-xs">Built on free, public data sources.</span> */}
         </div>
       </div>
     </footer>

@@ -109,13 +109,13 @@ def test_delete_is_soft_and_row_persists(client, settings):
     assert not any(c["campaign_id"] == cid for c in db.list_campaigns())
     db.close()
 
-    # Recreating with the same name gets a NEW id — the kept row is never overwritten.
+    # Recreating with the same name gets a NEW id – the kept row is never overwritten.
     cid2 = _create(client, "Keep Me Forever").json()["campaign_id"]
     assert cid2 != cid
 
 
 def test_nl_honours_discovery_hints(client):
-    """OSM/search hints from the NL form pin discovery scope — the pipeline treats user map
+    """OSM/search hints from the NL form pin discovery scope – the pipeline treats user map
     categories as authoritative, so e.g. a doctors search never re-broadens to pharmacies."""
     r = client.post("/campaigns/nl", json={
         "text": "find doctors in G-11 Islamabad",

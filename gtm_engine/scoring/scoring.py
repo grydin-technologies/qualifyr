@@ -5,7 +5,7 @@ Reference formula (reverse-engineered from the competitor xlsx):
   + online_gap (0-25) + pain_evidence (0-20) = max 100
 
 Each dimension is observable and independently auditable. When Google Places
-data is missing (no API key), review_band and rating are 0 — the lead still
+data is missing (no API key), review_band and rating are 0 – the lead still
 ranks on online_gap + pain_evidence + proximity."""
 
 from __future__ import annotations
@@ -115,7 +115,7 @@ def _pain_evidence_score(
     if signals.intent:
         pts += 2
         for s in signals.intent[:1]:
-            reasons.append(f"intent: {s.get('kind')} — {s.get('text', '')[:50]}")
+            reasons.append(f"intent: {s.get('kind')} – {s.get('text', '')[:50]}")
 
     return min(int(round(pts)), max_pts)
 
@@ -145,7 +145,7 @@ def score_lead(inputs: ScoreInputs, campaign: CampaignConfig) -> ScoreBreakdown:
     if op:
         og_pts = min(op.online_gap_score, w.online_gap)
         if op.online_gap_score >= 18:
-            reasons.append("online gap: no ordering channel — strong candidate")
+            reasons.append("online gap: no ordering channel – strong candidate")
         elif op.online_gap_score >= 10:
             reasons.append("online gap: limited digital presence")
         elif op.online_gap_score > 0:

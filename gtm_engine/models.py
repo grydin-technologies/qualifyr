@@ -210,7 +210,7 @@ class Lead(BaseModel):
     buying_signal: str | None = None
     personalization_hook: str | None = None
     research_brief: str | None = None    # consolidated per-company research summary (P5)
-    online_presence: dict | None = None  # OnlinePresence.model_dump() — digital-maturity audit
+    online_presence: dict | None = None  # OnlinePresence.model_dump() – digital-maturity audit
     pitch_angle: str | None = None       # module→pain pitch (specific to this lead's gaps)
     # LLM intent verdict: whether the company plausibly NEEDS the offer, judged from its own
     # text (not keywords). None when the LLM layer is off. Surfaced in the UI and CSV-adjacent.

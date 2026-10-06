@@ -20,7 +20,7 @@ const KEY_INFO: Record<string, { label: string; description: string; url: string
   places: { label: "Google Places", description: "Rating, review count and opening hours enrichment. 1K free calls/month.", url: "https://console.cloud.google.com/apis/credentials" },
 }
 
-/** Shown while the server config is still being checked — so neither the "add" form nor the
+/** Shown while the server config is still being checked – so neither the "add" form nor the
  *  "not configured" warning flashes before we actually know the state. */
 function CheckingConfig() {
   return (
@@ -31,7 +31,7 @@ function CheckingConfig() {
 }
 
 /** Soft, informational notice when server-side encryption isn't set up. Replaces the old
- *  bare red line — only rendered after the config check completes and only when it's missing. */
+ *  bare red line – only rendered after the config check completes and only when it's missing. */
 function EncryptionNotice({ what }: { what: string }) {
   return (
     <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-400">
@@ -433,7 +433,7 @@ function Mailboxes({ campaignId }: { campaignId: string | null }) {
                   <TableRow key={m.address}>
                     <TableCell className="font-mono text-xs">{m.address}</TableCell>
                     <TableCell className="text-xs text-muted-foreground">{m.smtp_host}:{m.smtp_port}</TableCell>
-                    <TableCell className="text-xs">{m.sender_name ?? "—"}</TableCell>
+                    <TableCell className="text-xs">{m.sender_name ?? "–"}</TableCell>
                     <TableCell>
                       <Badge variant={m.enabled ? "default" : "secondary"}>{m.enabled ? "active" : "paused"}</Badge>
                     </TableCell>

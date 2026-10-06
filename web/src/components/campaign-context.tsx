@@ -61,7 +61,7 @@ export function CampaignProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => { refresh(true) }, [refresh])
 
   // While any campaign has an active run, keep the list fresh so run status and counts stay
-  // live across the whole app — a dispatched run must never look like "nothing ran", on any
+  // live across the whole app – a dispatched run must never look like "nothing ran", on any
   // page, after navigating away and back. The provider lives at the app shell, so this poll
   // survives page navigation.
   const anyRunActive = campaigns.some(

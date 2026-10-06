@@ -110,7 +110,7 @@ export default function DashboardPage() {
 
   const campaign = campaigns.find((c) => c.campaign_id === campaignId)
   // While a newly-selected campaign's data is in flight, `stats` still holds the previous
-  // campaign's numbers — detect that via the campaign_id it carries and show skeletons instead.
+  // campaign's numbers – detect that via the campaign_id it carries and show skeletons instead.
   const loading = !stats || stats.campaign_id !== campaignId
 
   if (!campaignId) {
@@ -154,7 +154,7 @@ export default function DashboardPage() {
         <CampaignMeta campaign={campaign} />
       </div>
 
-      {/* KPIs — pipeline funnel first, then engagement & quality */}
+      {/* KPIs – pipeline funnel first, then engagement & quality */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {!loading && stats ? (
           <>
@@ -169,7 +169,7 @@ export default function DashboardPage() {
             <StatCard title="Replies" value={stats.replied} icon={MessageSquareReply}
               hint={`${stats.bounced} bounced · ${stats.by_status.unsubscribed} unsubscribed`} />
             <StatCard title="Reviewer accuracy"
-              value={stats.accuracy === null ? "—" : `${Math.round(stats.accuracy * 100)}%`} icon={Gauge}
+              value={stats.accuracy === null ? "–" : `${Math.round(stats.accuracy * 100)}%`} icon={Gauge}
               hint={stats.reviewed ? `${stats.correct}/${stats.reviewed} marked correct · target 80%` : "mark leads correct / wrong in the queue"} />
           </>
         ) : (
@@ -261,7 +261,7 @@ export default function DashboardPage() {
                 {!loading && top.length === 0 && (
                   <TableRow className="hover:bg-transparent">
                     <TableCell colSpan={6} className="py-12 text-center text-sm text-muted-foreground">
-                      No qualified buyers yet — run the campaign to populate this list.
+                      No qualified buyers yet – run the campaign to populate this list.
                     </TableCell>
                   </TableRow>
                 )}

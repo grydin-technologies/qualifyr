@@ -1,7 +1,7 @@
 """Hardening: a 200 response is not proof of a live company site, and a harvested string
 is not proof of an address. Each case here produced a confident, wrong lead before.
 
-Direction: quality over quantity — when a signal cannot be trusted, drop the lead."""
+Direction: quality over quantity – when a signal cannot be trusted, drop the lead."""
 
 import httpx
 import pytest

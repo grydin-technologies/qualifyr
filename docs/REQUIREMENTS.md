@@ -1,9 +1,9 @@
-# Requirements — GTM Lead Engine (Phase 1)
+# Requirements – GTM Lead Engine (Phase 1)
 
 Consolidated from the two source specs (`GTM_Lead_Engine_Claude_Code_Spec.docx` is primary;
 `GTM_Lead_Engine_Spec_Claude_Code.docx` contributed the role whitelist/blacklist and Brevo as
-an SMTP option). Items from the older spec that conflict with the primary one — LinkedIn
-scrapers, theHarvester, Apollo/Clay tiers — are deliberately excluded.
+an SMTP option). Items from the older spec that conflict with the primary one – LinkedIn
+scrapers, theHarvester, Apollo/Clay tiers – are deliberately excluded.
 
 ## Goal
 
@@ -23,8 +23,8 @@ Founder / GTM operator running campaigns for their own offer. Single-tenant in P
 
 1. Offer / ICP configuration (YAML)
 2. Buyer-oriented source discovery (OpenStreetMap/Overpass primary, seed CSV, search fallback)
-3. Company website scraping (home, about, contact, team, services, careers — max N pages)
-4. **Buyer / VENDOR / UNKNOWN gate** — mandatory, explainable
+3. Company website scraping (home, about, contact, team, services, careers – max N pages)
+4. **Buyer / VENDOR / UNKNOWN gate** – mandatory, explainable
 5. Deduplication (domain first, name+city second) + validation
 6. Decision-maker discovery from public company pages only
 7. Email validation (syntax + MX; no paid API; never "verified" by `@` alone)

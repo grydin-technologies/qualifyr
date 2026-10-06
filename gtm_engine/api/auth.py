@@ -123,7 +123,7 @@ def verify_request(request: Request) -> dict | None:
 
 def current_user_id(request: Request) -> str | None:
     """The signed-in user's id (the token's `sub`), or None when auth is disabled or bypassed
-    (local operator, tests). None means 'no scoping' — the caller sees everything, which keeps
+    (local operator, tests). None means 'no scoping' – the caller sees everything, which keeps
     single-operator and test behaviour exactly as before multi-tenancy."""
     user = getattr(request.state, "user", None)
     return user.get("sub") if isinstance(user, dict) else None

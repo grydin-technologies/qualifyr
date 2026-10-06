@@ -18,11 +18,11 @@ from gtm_engine.storage.database import Database
 def main() -> None:
     user_id = sys.argv[1] if len(sys.argv) > 1 else None
     if not user_id:
-        print("no user_id provided — skipping key resolution")
+        print("no user_id provided – skipping key resolution")
         return
 
     if not encryption_available():
-        print("GTM_ENCRYPTION_KEY not set — cannot decrypt user keys")
+        print("GTM_ENCRYPTION_KEY not set – cannot decrypt user keys")
         sys.exit(1)
 
     db_url = os.environ.get("GTM_DATABASE_URL")

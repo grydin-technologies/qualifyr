@@ -1,5 +1,5 @@
 """Postgres (Supabase) repository. Was SQLite; kept the same plain-SQL, thin-repository
-shape (see docs/DECISIONS.md) so only this module and its constructor argument changed —
+shape (see docs/DECISIONS.md) so only this module and its constructor argument changed –
 every caller still just does `Database(dsn)` and calls the same methods."""
 
 from __future__ import annotations
@@ -467,8 +467,8 @@ class Database:
         row = self._execute("SELECT data_json FROM leads WHERE lead_id = %s", (lead_id,)).fetchone()
         return Lead.model_validate_json(row["data_json"]) if row else None
 
-    # `order` controls the sort: "score" (default, highest-scoring first — used by the dashboard
-    # top-buyers list) or "recent" (newest scraped first — the Leads page, so freshly discovered
+    # `order` controls the sort: "score" (default, highest-scoring first – used by the dashboard
+    # top-buyers list) or "recent" (newest scraped first – the Leads page, so freshly discovered
     # companies surface at the top rather than sinking by score).
     def list_leads(self, campaign_id: str, *, run_id: str | None = None,
                    min_score: int | None = None, company_type: str | None = None,
@@ -549,7 +549,7 @@ class Database:
                 "qualified": row["qualified"], "outreach_ready": row["outreach_ready"]}
 
     def campaign_stats(self, campaign_id: str, min_score: int) -> dict:
-        """Full dashboard stats computed in SQL — no Python deserialization of lead JSON."""
+        """Full dashboard stats computed in SQL – no Python deserialization of lead JSON."""
         row = self._execute(
             "SELECT "
             "COUNT(*) AS leads, "
@@ -809,7 +809,7 @@ class Database:
         """Atomically bump today's usage and report whether this request is within `limit`.
 
         One statement (INSERT ... ON CONFLICT DO UPDATE ... WHERE ... RETURNING), so two
-        concurrent requests can't both read an under-limit count and both proceed — the old
+        concurrent requests can't both read an under-limit count and both proceed – the old
         SELECT-then-UPDATE let a user slip past a daily cap under concurrency. The conditional
         UPDATE is skipped once the cap is reached for the day, so RETURNING yields no row and we
         deny. A new day (different last_reset_date) resets the count to 1 in the same statement."""

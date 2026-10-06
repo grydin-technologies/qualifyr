@@ -115,7 +115,7 @@ _PERSONAL_LINKEDIN = re.compile(r"(?:www\.)?linkedin\.com/in/[a-z0-9%\-_.]+", re
 
 
 def personal_profiles(html: str) -> list[str]:
-    """Every personal LinkedIn (/in/<slug>) link on the page — a person's profile, not the
+    """Every personal LinkedIn (/in/<slug>) link on the page – a person's profile, not the
     company's (/company/) page. Used to attach a decision-maker's own profile to them."""
     seen: set[str] = set()
     out: list[str] = []
@@ -169,7 +169,7 @@ def _looks_like_role(s: str) -> bool:
     return 2 <= len(s) <= 80 and not any(ch.isdigit() for ch in s) and _ROLE_RE.search(s) is not None
 
 
-_INLINE_SEP = r"\s*(?:,|–|—|-|:|\|)\s*"
+_INLINE_SEP = r"\s*(?:,|–|–|-|:|\|)\s*"
 _INLINE_TITLES = (
     "founder & ceo", "co-founder", "cofounder", "founder", "chief executive officer", "ceo",
     "managing director", "general manager", "chief operating officer", "coo", "director",

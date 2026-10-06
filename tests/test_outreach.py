@@ -77,7 +77,7 @@ def test_first_name_and_hook_sentence():
 
 def test_render_uses_facts_and_fallbacks(campaign, osettings, templates):
     named = render("email_1", _lead("Zara Fabrics", "a@zarafabrics.pk", contact_name="Ahmed Raza"), campaign, osettings, templates)
-    assert named.subject == "Zara Fabrics — quick question"
+    assert named.subject == "Zara Fabrics – quick question"
     assert named.body.startswith("Hi Ahmed,")
     assert "I noticed you sell online" in named.body
     assert "reply with STOP" in named.body
@@ -233,7 +233,7 @@ def test_inbound_reply_stop_and_bounce(db, campaign, osettings, templates, tmp_p
     zara = next(l for l in db.list_leads("test-retail") if l.company_name == "Zara Fabrics")
 
     report = apply_inbound(db, "test-retail", [
-        InboundMessage(from_addr="someone-else@zarafabrics.pk", subject="Re: Zara Fabrics — quick question",
+        InboundMessage(from_addr="someone-else@zarafabrics.pk", subject="Re: Zara Fabrics – quick question",
                        body="Sure, let's talk Thursday.", in_reply_to=zara.thread_message_id),
         InboundMessage(from_addr="info@mcc.com.pk", subject="Re: ...", body="Please STOP emailing us."),
         InboundMessage(from_addr="mailer-daemon@googlemail.com", subject="Delivery Status Notification (Failure)",

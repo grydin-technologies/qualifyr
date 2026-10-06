@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: "/",
         // No signed-in route should ever be crawled or appear in a search result, and
-        // /sign-in is already noindex at the page level — disallow it here too so a
+        // /sign-in is already noindex at the page level – disallow it here too so a
         // crawler never fetches it in the first place.
         disallow: ["/dashboard", "/campaigns", "/leads", "/outreach", "/settings", "/sign-in"],
       },

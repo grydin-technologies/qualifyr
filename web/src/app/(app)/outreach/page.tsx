@@ -173,7 +173,7 @@ function SendPanel({ campaignId, queue, onDone }: { campaignId: string; queue: Q
           <div className="rounded-lg border p-3 text-sm">
             <div className="font-medium">
               {report.mode}: sent {report.sent}, held {report.skipped}, failed {report.failed}
-              {report.stopped_reason && <span className="text-muted-foreground"> — {report.stopped_reason}</span>}
+              {report.stopped_reason && <span className="text-muted-foreground"> – {report.stopped_reason}</span>}
             </div>
             {report.sync && <div className="text-xs text-muted-foreground">inbox sync: {JSON.stringify(report.sync)}</div>}
             {report.details.map((d, i) => <div key={i} className="text-xs text-muted-foreground">{d}</div>)}
@@ -214,7 +214,7 @@ export default function OutreachPage() {
   const pending = items.filter((i) => i.draft.status === "pending").length
 
   // Client-side pagination for the "Due now" list (the queue is already fully loaded). Clamping
-  // the page keeps it valid when the queue shrinks after an approve/reject — no reset effect.
+  // the page keeps it valid when the queue shrinks after an approve/reject – no reset effect.
   const queueTotalPages = Math.max(1, Math.ceil(items.length / QUEUE_PAGE_SIZE))
   const safeQueuePage = Math.min(queuePage, queueTotalPages)
   const queueOffset = (safeQueuePage - 1) * QUEUE_PAGE_SIZE
@@ -321,10 +321,10 @@ export default function OutreachPage() {
                         </div>
                       )}
                     </TableCell>
-                    <TableCell className="text-xs">{l.email_1_sent_at ? new Date(l.email_1_sent_at).toLocaleDateString() : "—"}</TableCell>
-                    <TableCell className="text-xs">{l.followup_1_at ? new Date(l.followup_1_at).toLocaleDateString() : "—"}</TableCell>
-                    <TableCell className="text-xs">{l.followup_2_at ? new Date(l.followup_2_at).toLocaleDateString() : "—"}</TableCell>
-                    <TableCell className="text-xs">{l.next_contact_at ? new Date(l.next_contact_at).toLocaleDateString() : "—"}</TableCell>
+                    <TableCell className="text-xs">{l.email_1_sent_at ? new Date(l.email_1_sent_at).toLocaleDateString() : "–"}</TableCell>
+                    <TableCell className="text-xs">{l.followup_1_at ? new Date(l.followup_1_at).toLocaleDateString() : "–"}</TableCell>
+                    <TableCell className="text-xs">{l.followup_2_at ? new Date(l.followup_2_at).toLocaleDateString() : "–"}</TableCell>
+                    <TableCell className="text-xs">{l.next_contact_at ? new Date(l.next_contact_at).toLocaleDateString() : "–"}</TableCell>
                   </TableRow>
                 ))}
                 {sequence.length === 0 && <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground">No one in sequence yet.</TableCell></TableRow>}

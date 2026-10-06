@@ -1,7 +1,6 @@
 import { Radar, ListChecks, ShieldCheck, Ban } from "lucide-react"
 
 const stats = [
-  { icon: Radar, value: "8", label: "Free public sources, no paid data broker" },
   { icon: ListChecks, value: "5", label: "Scored dimensions, every point explained" },
   { icon: ShieldCheck, value: "100%", label: "Outreach drafts reviewed before they send" },
   { icon: Ban, value: "0", label: "Leads sent without a human approving them" },

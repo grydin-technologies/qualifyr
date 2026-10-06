@@ -72,7 +72,7 @@ def cmd_send(args: argparse.Namespace) -> int:
               + (f", warm-up day {st['days_active']}" if st['days_active'] else "")
               + (f", PAUSED: {st['paused_reason']}" if st['paused_reason'] else ""))
     print(f"sent {report.sent}, skipped {report.skipped}, failed {report.failed} via {pool.name}"
-          + (f" — stopped: {report.stopped_reason}" if report.stopped_reason else ""))
+          + (f" – stopped: {report.stopped_reason}" if report.stopped_reason else ""))
     pool.close()
     db.close()
     return 0 if report.failed == 0 else 1
@@ -132,7 +132,7 @@ def cmd_preview(args: argparse.Namespace) -> int:
     for l in leads:
         for step in ("email_1", "followup_1", "followup_2"):
             r = render(step, l, campaign, osettings, templates)
-            print(f"===== {l.company_name} <{l.contact_email}> — {step}")
+            print(f"===== {l.company_name} <{l.contact_email}> – {step}")
             print(f"Subject: {r.subject}\n\n{r.body}")
     db.close()
     return 0

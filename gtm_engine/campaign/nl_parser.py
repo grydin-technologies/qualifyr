@@ -3,8 +3,8 @@
 Accepts free-form text like "find grocery stores in Islamabad that need inventory
 software" and produces a CampaignConfig ready to run.  Two stages:
 
-  1. Deterministic extraction — regex/keyword scans, always runs, no LLM needed.
-  2. LLM refinement — optional, merges with stage 1 (deterministic wins on conflict).
+  1. Deterministic extraction – regex/keyword scans, always runs, no LLM needed.
+  2. LLM refinement – optional, merges with stage 1 (deterministic wins on conflict).
 
 After extraction the existing derive_discovery_targets() and generate_keywords()
 fill in OSM/Overture categories and buyer keywords, so the NL layer only needs to
@@ -133,7 +133,7 @@ _MIN_REVIEWS_RE = re.compile(r"(?:more\s+than|at\s+least|minimum|min)\s+(\d+)\s+
 _NEAR_RE = re.compile(r"(?:near|close\s+to|around|in\s+the\s+area\s+of)\s+(.+?)(?:\.|,|$)", re.I)
 # Residential sector codes use letters A-J (Islamabad/Rawalpindi). The letter is deliberately
 # NOT [A-Z]: that matched motorways (M-1, M-2, M-9), national highways (N-5, N-25) and things
-# like "T-20" / "G-20" — all read as bogus areas that then geofenced a run down to nothing.
+# like "T-20" / "G-20" – all read as bogus areas that then geofenced a run down to nothing.
 _AREA_RE = re.compile(
     r"\b([A-J]-\d{1,2}(?:/\d)?|[EFGHI]-\d{1,2}|DHA(?:\s+Phase\s*\d+)?|Gulberg|Saddar|Blue\s*Area|Bahria\s*Town"
     r"|Model\s*Town|Garden\s*Town|Johar\s*Town|Cantt|Clifton|Defence|PECHS|Gulshan"
@@ -191,7 +191,7 @@ _GENERIC_SUBJECT_WORDS = {
     "vendors", "entities", "players", "owners", "someone", "anyone", "who",
 }
 # A fragment that STARTS with one of these is a verb/clause ("might need …",
-# "looking for …"), not a noun phrase naming an industry — drop it entirely.
+# "looking for …"), not a noun phrase naming an industry – drop it entirely.
 _VERB_LEAD_WORDS = {
     "might", "need", "needing", "want", "wanting", "require", "requiring",
     "looking", "seeking", "may", "would", "could", "should", "will", "can",
@@ -206,7 +206,7 @@ def _extract_subject(text: str) -> list[str]:
     """Extract the business types the user is looking for (e.g. "travel agencies, hotels").
 
     Verbose queries describe buyers in full sentences ("companies and individuals
-    who might need vehicle rentals — corporate offices, ..."). Keep only concise
+    who might need vehicle rentals – corporate offices, ..."). Keep only concise
     noun-phrase fragments (<=4 words), dropping generic head-nouns and verb clauses,
     so the result is usable as both discovery terms and a campaign title.
     """
@@ -218,7 +218,7 @@ def _extract_subject(text: str) -> list[str]:
             raw = _STRIP_QUANTIFIER.sub("", raw).strip()
             if len(raw) < 2:
                 continue
-            parts = re.split(r"\s+and\s+|\s*,\s*|\s*[—–-]\s+|\s+who\s+|\s+that\s+", raw)
+            parts = re.split(r"\s+and\s+|\s*,\s*|\s*[––-]\s+|\s+who\s+|\s+that\s+", raw)
             cleaned: list[str] = []
             for p in parts:
                 words = p.strip().rstrip(".").split()
@@ -289,7 +289,7 @@ def parse_intent(text: str) -> CampaignDraft:
     draft.provinces = _extract_provinces(text)
     draft.areas = _extract_areas(text)
     # Don't treat a word that is part of a recognised city name as a separate area: "Wah Cantt"
-    # is a city, so its "Cantt" token is not an area — otherwise the area geofence drops every
+    # is a city, so its "Cantt" token is not an area – otherwise the area geofence drops every
     # result (a bogus "Cantt" location) and the run returns nothing.
     _city_words = {w.lower() for c in draft.cities for w in re.split(r"[\s\-]+", c)}
     draft.areas = [a for a in draft.areas if a.lower() not in _city_words]
@@ -322,7 +322,7 @@ def parse_intent(text: str) -> CampaignDraft:
 # ---------------------------------------------------------------------------
 
 def _name_from_draft(draft: CampaignDraft) -> str:
-    """A short, human-readable campaign title: '<subject> — <area/city>'.
+    """A short, human-readable campaign title: '<subject> – <area/city>'.
 
     Never echoes the raw query sentence. Priority for the subject: an LLM-supplied
     name, then concise industry terms, then matched sectors, then the offer; the
@@ -378,7 +378,7 @@ def build_campaign_config(
     """Assemble a valid CampaignConfig from a CampaignDraft.
 
     The caller is responsible for running derive_discovery_targets() and
-    generate_keywords() on the returned config if desired — this function
+    generate_keywords() on the returned config if desired – this function
     only fills in what the NL parser extracted, plus sane defaults.
     """
     name = _name_from_draft(draft)

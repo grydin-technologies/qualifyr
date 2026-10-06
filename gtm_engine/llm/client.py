@@ -72,7 +72,7 @@ def _estimate_tokens(system: str, user: str, max_tokens: int) -> int:
 
 async def _post_with_retry(client: httpx.AsyncClient, url: str, *, headers: dict | None = None,
                            json: dict | None = None, retries: int = 3, base_delay: float = 0.6) -> httpx.Response:
-    """POST that retries transient failures — HTTP 429 / 5xx and network errors — with
+    """POST that retries transient failures – HTTP 429 / 5xx and network errors – with
     exponential backoff, honouring a Retry-After header when present. Rate limiting on a free
     tier is the common case, and one dropped call silently loses a verdict (e.g. a company's
     intent judgment), so a few backed-off retries are worth the wait. A non-transient response

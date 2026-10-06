@@ -165,8 +165,8 @@ const frames = [
           <span className="rounded-full bg-brand px-3 py-1 text-[11px] font-medium text-brand-foreground">Review</span>
         </div>
         {[
-          { to: "Ahmed Raza", co: "RBS Interiors", body: "noticed RBS Interiors is hiring for retail ops — quick idea on sourcing…" },
-          { to: "Sana Malik", co: "Ittefaq Electronics", body: "saw Ittefaq just opened a second Lahore branch — congrats. One thought…" },
+          { to: "Ahmed Raza", co: "RBS Interiors", body: "noticed RBS Interiors is hiring for retail ops – quick idea on sourcing…" },
+          { to: "Sana Malik", co: "Ittefaq Electronics", body: "saw Ittefaq just opened a second Lahore branch – congrats. One thought…" },
         ].map((d, i) => (
           <div
             key={d.to}

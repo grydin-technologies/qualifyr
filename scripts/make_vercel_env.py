@@ -20,7 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 # What the Vercel-hosted API function actually reads. Deliberately excludes the crawl-only
-# keys (Brave/Hunter) — those are consumed by the GitHub Actions jobs, and shipping a
+# keys (Brave/Hunter) – those are consumed by the GitHub Actions jobs, and shipping a
 # secret to a host that never uses it is pure downside.
 VERCEL_KEYS = [
     "GTM_DATABASE_URL",
@@ -44,7 +44,7 @@ VERCEL_KEYS = [
 
 
 # What the GitHub Actions jobs read (union of gather-leads.yml and outreach.yml).
-# Includes the crawl keys Vercel does not get, and excludes the dispatch token —
+# Includes the crawl keys Vercel does not get, and excludes the dispatch token –
 # Actions cannot dispatch itself.
 GITHUB_KEYS = [
     "GTM_DATABASE_URL",
@@ -97,7 +97,7 @@ def write_target(name: str, keys: list[str], env: dict[str, str], *, transaction
         # Supabase hands out :5432 (the session pooler), which holds one connection per
         # client. That is right for a long-lived process and fatal for serverless, where
         # every cold function grabs one and the project's limit is gone in a burst.
-        # :6543 is the transaction pooler. So Vercel gets :6543, Actions keeps :5432 —
+        # :6543 is the transaction pooler. So Vercel gets :6543, Actions keeps :5432 –
         # same database, and the wrong one fails only under load, which is the worst
         # time to find out.
         if key == "GTM_DATABASE_URL" and transaction_pooler:
@@ -129,14 +129,14 @@ def main() -> None:
     write_target(".env.vercel", VERCEL_KEYS, env, transaction_pooler=True)
     write_target(".env.github", GITHUB_KEYS, env, transaction_pooler=False)
 
-    print("\nMissing values are left out entirely rather than written blank — an empty")
+    print("\nMissing values are left out entirely rather than written blank – an empty")
     print("env var reads as 'configured' to both hosts and silently breaks things.")
     print("\nImport:")
     print("  Vercel  Settings -> Environment Variables -> drag .env.vercel")
     print("  GitHub  gh secret set -f .env.github   (or Settings -> Secrets, one by one)")
     print("\nNEXT_PUBLIC_API_URL is not included: set it in Vercel to")
     print("https://<your-deployment>.vercel.app/api once you know the URL.")
-    print("Delete both files once imported — they are gitignored, not encrypted.")
+    print("Delete both files once imported – they are gitignored, not encrypted.")
 
 
 if __name__ == "__main__":

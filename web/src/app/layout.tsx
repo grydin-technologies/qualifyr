@@ -13,7 +13,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://qualifyr.vercel.app
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Qualifyr — See who actually buys",
+    default: "Qualifyr – See who actually buys",
     template: "%s · Qualifyr",
   },
   description:
@@ -21,13 +21,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Qualifyr",
-    title: "Qualifyr — See who actually buys",
+    title: "Qualifyr – See who actually buys",
     description:
       "A buyer-only B2B lead engine for Pakistan and the GCC. Finds companies that buy, rejects the ones that sell, and explains every score.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Qualifyr — See who actually buys",
+    title: "Qualifyr – See who actually buys",
     description:
       "A buyer-only B2B lead engine for Pakistan and the GCC. Finds companies that buy, rejects the ones that sell, and explains every score.",
   },

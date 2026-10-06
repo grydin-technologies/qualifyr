@@ -25,7 +25,7 @@ _RETRYABLE = {408, 425, 429, 500, 502, 503, 504}
 
 def _is_blocked_ip_literal(hostname: str) -> bool:
     """True when the host is an IP literal in a non-public range (loopback, private, link-local,
-    reserved, multicast, unspecified). Domain names return False — we deliberately do not resolve
+    reserved, multicast, unspecified). Domain names return False – we deliberately do not resolve
     here, to keep the crawl path hermetic and fast. This blocks the direct-IP SSRF vectors
     (notably cloud metadata at 169.254.169.254, and 127.0.0.1 / 10.x / 192.168.x)."""
     try:

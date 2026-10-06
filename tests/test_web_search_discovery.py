@@ -1,4 +1,4 @@
-"""E2 web-search discovery: query derivation and the discovery source. Offline — no network
+"""E2 web-search discovery: query derivation and the discovery source. Offline – no network
 (search_web is monkeypatched) and no DB."""
 
 import pytest
@@ -74,7 +74,7 @@ async def test_web_search_discovery_filters_directories_social_and_dedupes(monke
     results = {
         "q1": [("https://khaadi.com/", "Khaadi"),
                ("https://facebook.com/khaadi", "Khaadi on Facebook"),   # social -> dropped
-               ("https://khaadi.com/about", "Khaadi — About")],         # same domain -> deduped
+               ("https://khaadi.com/about", "Khaadi – About")],         # same domain -> deduped
         "q2": [("https://yellowpages.pk/khaadi", "directory"),          # directory -> dropped
                ("https://outfitters.com.pk/", "Outfitters")],
     }
